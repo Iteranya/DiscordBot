@@ -32,11 +32,13 @@ from aiohttp import TCPConnector
 from discord.ext import commands
 from discord import app_commands
 from discord import Interaction
+from dotenv import load_dotenv
 
 # API Keys and Information
 # Your API keys and tokens go here. Do not commit with these in place!
-discord_api_key = "PUT_YOUR_DISCORD_TOKEN_HERE"
-
+# discord_api_key = "PUT_YOUR_DISCORD_TOKEN_HERE"
+# Goodness Gracious! Was it really that hard  to implement a proper env!?
+discord_token = os.getenv("DISCORD_TOKEN")
 
 # Flag to enable TTS (XTTS) - use --tts when launching
 enable_tts_global = True
