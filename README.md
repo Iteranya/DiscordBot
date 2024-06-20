@@ -67,8 +67,8 @@ Cheers!
 
 ## ToDo (From Top Priority to the Least Important):
 
-- [v] Make a better README.
-- [ ] Add more standard Discord Bot features. (music, games, moderation, etc.)
+- [x] Make a better README.
 - [ ] Implement GBNF for literal fucking Large Action Model feature.
+- [ ] Add more standard Discord Bot features. (music, games, moderation, etc.)
 - [ ] Enable support for ~~Character.ai~~, TavernAI, SillyTavern, etc. character formats.
 - [ ] Make switching between Koboldcpp or Oobabooga Textgen-ui more mainstream.
