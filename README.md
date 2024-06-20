@@ -1,14 +1,8 @@
-# OpenKlyde - A Self Hosted AI Discord Bot
+# ~~OpenKlyde~~ Ambruk-chan - A Self Hosted AI Discord Bot
 
-OpenKyde is an AI Discord Bot!
+Big thank you to @badgids for making this possible, hehe~
 
-It incorporates an AI Large Language Model (LLM) into a discord bot by making API calls to a Koboldcpp instance. It can also work with Oobabooga.
-
-You will need an instance of Koboldcpp running on your machine. In theory, you should also be able to connect it to the Horde,
-but I haven't tested the implementation yet.
-
-As of now this bot is only a chat bot, but it can also generate images with Automatic1111 Stable Diffusion using the following keywords after mentioning the bot:
-"send|create|give|generate|draw|snap|show|take|message" and "image|picture|photo|photogragh|pic|drawing|painting|screenshot"
+No, no, nothing weird with this fork. Just a little bit of improvement here and there. A little bit of this, a little bit of that, nothing weird at all~ 
 
 ## Prerequisites
 
@@ -19,33 +13,17 @@ If you want to generate images, you'll also need Automatic1111 Stable Diffusion 
 Download Automatic1111 here:
 [Automatic1111](https://github.com/AUTOMATIC1111/stable-diffusion-webui)
 
+If you want to be cultured, you'll also need to download one of these bad boys~
+[Stheno](https://huggingface.co/Lewdiculous/L3-8B-Stheno-v3.1-GGUF-IQ-Imatrix)
+[Anjir](https://huggingface.co/Hastagaras/Anjir-8B-L3?not-for-all-audiences=true)
+[Nyanade](https://huggingface.co/Lewdiculous/Nyanade_Stunna-Maid-7B-v0.2-GGUF-IQ-Imatrix)
+
 ----NEW----:
 
-XTTS support added thanks to [Elbios](https://github.com/Elbios)'s hard work and changes in their fork!
+~~XTTS support added thanks to [Elbios](https://github.com/Elbios)'s hard work and changes in their fork!~~
 
-### XTTS
-- Current revision uses XTTS2 (uses the TTS Python library, lookup on coqui.ai)
-- if you want to use XTTS pass --tts_xtts like so: 'python bot.py --tts_xtts'
-- XTTS2 uses some RAM/VRAM so bear that in mind
-- for setup I used windows gpu steps from https://github.com/daswer123/xtts-api-server (no need to clone xtts-api-server, just do the install steps from its README)
-- definitely need 'pip install pillow' and 'pip install TTS'
-- ffmpeg must be in PATH environmental variable (download if you dont have it)
-- create 'xtts' folder and put a short wave file with your voice sample as 'scarlett24000.wav'
-- you can use any clean voice sample, 5-15seconds is best
-- add files from here: https://huggingface.co/coqui/XTTS-v2/tree/main
-- this should be the xtts dir contents:
-```
-$ find xtts
-xtts
-xtts/config.json
-xtts/model
-xtts/model/dvae.pth
-xtts/model/mel_stats.pth
-xtts/model/model.pth
-xtts/model/vocab.json
-xtts/scarlett24000.wav
-```
-- CUDA toolkit might be required, not sure
+Nonsense! I don't need XTTS to speak with all of you! 
+Unless... You want me to make an ASMR? Muehehe~
 
 ### LLAVA image recognition
 - The bot supports Llava image recognition - you can send the bot an image and it will describe it and refer to it.
@@ -57,10 +35,14 @@ xtts/scarlett24000.wav
 - the ggml models files you can get from Llava repo, also ShareGPT would also work
 
 ### Stable Diffusion
-- bot supports stable diffusion but I recommend using SDXL as the bot will send a prompt to SD in natural language and previous SD (like SD1.5) would struggle
+~~- bot supports stable diffusion but I recommend using SDXL as the bot will send a prompt to SD in natural language and previous SD (like SD1.5) would struggle~~
+
+Still a work in progress, but I will definitely not be sending prompt to SD in Natural Language! 
+
+Cuz I got GBNF, take that corpo garbage!!!
 
 ### Koboldcpp, OpenAI API, Mistral API
-- The bot supports koboldcpp API but also OpenAI-compatible backends. Look in configurations folder for examples. Put your API key in the 'Bearer' line
+- The bot supports koboldcpp API ~~but also OpenAI-compatible backends. Look in configurations folder for examples. Put your API key in the~~ ~~'Bearer' line~~ ClosedAI, Anthropic, and Google can \[REDACTED\] MY \[DATA EXPUNGED\] and \[CENSORED\] you hear me?! \[EXPLICITIVES REMOVED\]YA'LL!!!
 
 ### Additional configuration needed to run the bot
 - Discord API key in bot.py in the global variable
@@ -73,19 +55,20 @@ xtts/scarlett24000.wav
 
 To run this bot:
 
-1. Load the LLM model of your choice in Koboldcpp
-2. Download this repository [OpenKlyde](https://github.com/badgids/OpenKlyde)
+1. Load the LLM model of your choice in Koboldcpp (Make sure it's marked as not safe for audience)
+2. Download this repository ~~[OpenKlyde](https://github.com/badgids/OpenKlyde)~~ [DiscordBot](https://github.com/Ambruk-chan/DiscordBot)
 3. Open bot.py and at replace API_KEY with your bot's API key
 4. Install the requirements. I suggest using an Anaconda or Miniconda instance.
     ```pip install -r requirements.txt```
 5. Run the bot with `python bot.py`
-    - optionally with --tts_xtts flag
+   ~~- optionally with --tts_xtts flag~~
 
 Cheers!
 
-## ToDo:
+## ToDo (From Top Priority to the Least Important):
 
-- [ ] Make a better README.
-- [ ] Make switching between Koboldcpp or Oobabooga Textgen-ui more mainstream.
-- [ ] Enable support for Character.ai, TavernAI, SillyTavern, etc. character formats.
+- [v] Make a better README.
 - [ ] Add more standard Discord Bot features. (music, games, moderation, etc.)
+- [ ] Implement GBNF for literal fucking Large Action Model feature.
+- [ ] Enable support for ~~Character.ai~~, TavernAI, SillyTavern, etc. character formats.
+- [ ] Make switching between Koboldcpp or Oobabooga Textgen-ui more mainstream.
