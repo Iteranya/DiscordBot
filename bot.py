@@ -36,8 +36,8 @@ from dotenv import load_dotenv
 
 # API Keys and Information
 # Your API keys and tokens go here. Do not commit with these in place!
-# discord_api_key = "PUT_YOUR_DISCORD_TOKEN_HERE"
-# Goodness Gracious! Was it really that hard  to implement a proper env!?
+# discord_api_key = "PUT_YOUR_DISCORD_TOKEN_HERE" // Goodness Gracious! Was it really that hard  to implement a proper env!?
+load_dotenv()
 discord_token = os.getenv("DISCORD_TOKEN")
 
 # Flag to enable TTS (XTTS) - use --tts when launching
@@ -309,7 +309,7 @@ async def bot_answer(message, image_description=None):
     await message.add_reaction('✨')
 
     user = message.author.display_name
-    user = user.replace(" ", "")
+    user = user.replace(" ", "").lower()
 
     # Clean the user's message to make it easy to read
     user_input = functions.clean_user_message(message.clean_content)
@@ -617,11 +617,8 @@ def split_dialogue(dialogue: str, max_length) -> List[str]:
     dialogue_parts.reverse()
     return dialogue_parts
 
-
-# Reply queue that's used to allow the bot to reply even while other stuff if is processing
 async def send_to_user_queue():
     while True:
-
         # Grab the reply that will be sent
         reply = await queue_to_send_message.get()
 
@@ -633,59 +630,26 @@ async def send_to_user_queue():
             await reply["content"]["message"].remove_reaction('✨', client.user)
             await reply["content"]["message"].add_reaction('✅')
 
-        # Do not do TTS for image gen responses
+        # Split the response into chunks of 1500 characters
+        response = reply["response"]
+        response_chunks = [response[i:i+1500] for i in range(0, len(response), 1500)]
+
         if not reply["content"]["image"]:
-            if 'Xtts' in globals():
-                try:
-                    # After getting the dialogue, split it
-                    dialogue_parts = split_dialogue(reply["response"], 200)
-
-                    # Generate TTS audio for each part
-                    audio_parts = []
-                    for part in dialogue_parts:
-                        # better not send emojis to TTS
-                        part = strip_emoji(part)
-                        audio_path = await generate_tts(part)
-                        audio_parts.append(AudioSegment.from_wav(audio_path))
-                        os.remove(audio_path)
-
-                    # Create a silent audio segment of 0.5 seconds (500 milliseconds)
-                    silence = AudioSegment.silent(duration=800)
-
-                    # Add the silent segment between each pair of audio segments
-                    combined_audio = sum(x for y in zip(
-                        audio_parts, [silence]*len(audio_parts)) for x in y)
-
-                    # Save the combined audio file
-                    md5hash = hashlib.md5(reply["response"].encode('utf-8'))
-                    md5hash_hex = md5hash.hexdigest()
-                    combined_audio_path = "tts_output_" + md5hash_hex + ".wav"
-                    combined_audio.export(combined_audio_path, format="wav")
-
-                    # Send the combined audio file
-                    audio_file = discord.File(combined_audio_path)
-                except Exception as e:
-                    # TTS generation failed, skip TTS audio
-                    audio_file = None
-            else:
-                # TTS disabled, skip TTS audio
-                audio_file = None
-
             if not reply["content"]["channel"]:
-                await reply["content"]["message"].channel.send(reply["response"], file=audio_file, reference=reply["content"]["message"])
-                # await reply["content"]["message"].channel.send(reply["response"], reference=reply["content"]["message"])
+                for chunk in response_chunks:
+                    await reply["content"]["message"].channel.send(chunk, reference=reply["content"]["message"])
             else:
-                # send random message on channel
-                # await functions.write_to_log("Sending random message.")
+                # Send random message on channel
                 print("Sending random message.")
-                await reply["content"]["channel"].send(reply["response"])
-
+                for chunk in response_chunks:
+                    await reply["content"]["channel"].send(chunk)
         else:
             image_file = discord.File(reply["image"])
             await reply["content"]["message"].channel.send(reply["response"], file=image_file, reference=reply["content"]["message"])
             os.remove(reply["image"])
 
         queue_to_send_message.task_done()
+
 
 
 @client.event
@@ -949,5 +913,5 @@ if enable_tts_global:
     from TTS.tts.models.xtts import Xtts
     print("XTTS libraries imported.")
 
-client.run(discord_api_key)
+client.run(discord_token)
 # unittest.main()

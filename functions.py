@@ -135,7 +135,7 @@ async def create_text_prompt(user_input, user, character, bot, history, reply, t
         prompt = character + history + reply + user + \
             ": " + user_input + "\n" + bot + ": "
     stopping_strings = ["\n" + user + ":", user + ":", bot +
-                        ":", "You:", "@Ava", "User", "@" + user, "<|endoftext|>"]
+                        ":", "You:", "@Ava", "User", "@" + user, "<|endoftext|>", "<|eot_id|>"]
 
     data = text_api["parameters"]
 
@@ -166,7 +166,7 @@ async def create_image_prompt(user_input, character, text_api):
     else:
         prompt = "Please describe the way you look in maximum three sentences, in vivid detail using descriptive keywords so that someone could draw you based on that description."
 
-    stopping_strings = ["### Instruction:", "### Response:", "You:"]
+    stopping_strings = ["### Instruction:", "### Response:", "You:", "<|eot_id|>"]
 
     data = text_api["parameters"]
 
@@ -326,25 +326,27 @@ async def clean_llm_reply(message, user, bot):
     # Return nice and clean message
     return parts3[0]
 
-# Get the current bot character in a prompt-friendly format
-
+# HA! No, no, hell no!
 
 def get_character(character_card):
 
     # Your name is <name>.
-    character = "Your name is " + character_card["name"] + ". "
+    character = "You are " + character_card["name"] + ", you embody their character, persona, goals, personality, and bias which is described in detail below:"
 
     # Your name is <name>. You are a <persona>.
-    character = character + "You are " + character_card["persona"] + ". "
+    character = character + "Your persona: " + character_card["persona"] + ". "
 
     # Instructions on what the bot should do. This is where an instruction model will get its stuff.
     character = character + character_card["instructions"]
 
-    examples = []  # put example responses here
+    examples = character_card["examples"]  # put example responses here
+
+    # Add "<|eot_id|>" after each example
+    #modified_examples = [example + "<|eot_id|>" for example in examples]
 
     # Example messages!
-    character = character + " Here are examples of how you speak: " + \
-        "\n" + '\n'.join(examples) + "\n"
+    character = character + " A history reference to your speaking quirks and behavior: " + \
+    "\n" + '\n'.join(examples) + "\n"
 
     return character
 
