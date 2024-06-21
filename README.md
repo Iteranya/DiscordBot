@@ -14,9 +14,10 @@ Download Automatic1111 here:
 [Automatic1111](https://github.com/AUTOMATIC1111/stable-diffusion-webui)
 
 If you want to be cultured, you'll also need to download one of these bad boys~
-[Stheno](https://huggingface.co/Lewdiculous/L3-8B-Stheno-v3.1-GGUF-IQ-Imatrix)
-[Anjir](https://huggingface.co/Hastagaras/Anjir-8B-L3?not-for-all-audiences=true)
-[Nyanade](https://huggingface.co/Lewdiculous/Nyanade_Stunna-Maid-7B-v0.2-GGUF-IQ-Imatrix)
+
+- [Stheno](https://huggingface.co/Lewdiculous/L3-8B-Stheno-v3.1-GGUF-IQ-Imatrix) 
+- [Anjir](https://huggingface.co/Hastagaras/Anjir-8B-L3?not-for-all-audiences=true)
+- [Nyanade](https://huggingface.co/Lewdiculous/Nyanade_Stunna-Maid-7B-v0.2-GGUF-IQ-Imatrix)
 
 ----NEW----:
 
