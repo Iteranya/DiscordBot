@@ -69,6 +69,7 @@ Cheers!
 
 - [x] Make a better README.
 - [x] Add Webhook Support for more seamless Avatar Change
+- [x] Fixed the Webhook not detecting reply, (hopefully I don't get rate limited)
 - [ ] Redo the character trigger and swapping system with webhook.
 - [ ] Implement GBNF for literal fucking Large Action Model feature.
 - [ ] Add more standard Discord Bot features. (music, games, moderation, etc.)
