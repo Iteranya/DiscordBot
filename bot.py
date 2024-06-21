@@ -225,6 +225,7 @@ async def bot_behavior(message):
     global bot_last_message_time
     global bot_last_mentioned_channel
 
+
     # If the bot wrote the message, update last message time
     if message.author == client.user:
         if message.guild:
@@ -234,6 +235,23 @@ async def bot_behavior(message):
     # If the bot is mentioned in a message and not a DM, update last mentioned channel
     if client.user.mentioned_in(message) and message.guild:
         bot_last_mentioned_channel[message.guild.id] = message.channel
+
+    # If bot's name is mentioned still a WIP~
+    if message.webhook_id is  None:
+        # Convert the text to lowercase to make the search case insensitive
+        lower_text = message.content.lower()
+        userlist = ["Ambruk-chan","Mecanica"]
+        for user in list(userlist):
+            user.replace(':', '')
+
+        # Check for each word in the list if it is present in the text
+        for user in userlist:
+            if re.search(user.lower(), lower_text):
+                await bot_answer(message)
+                return True
+        return False
+
+
 
 # TODO: implement sending random messages to channel after timeout
     # If message not directed to bot
@@ -272,7 +290,7 @@ async def bot_behavior(message):
 
         # Set the time of last sent message to right now
         last_message_sent = datetime.datetime.now()
-        return True
+        return True    
 
     # If someone DMs the bot and message has attachment, reply to them in the same DM parsing the attachment
     if message.guild is None and not message.author.bot and message.attachments:
@@ -768,7 +786,7 @@ async def on_message(message):
 
     if message is None:
         return
-
+    
     # Bot will now either do or not do something!
     await bot_behavior(message)
 

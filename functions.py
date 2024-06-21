@@ -138,10 +138,11 @@ async def create_text_prompt(user_input, user, character, bot, history, reply, t
             user_input + "\n" + image_prompt + "\n" + bot + ": "
     else:
         eot = get_user_list(history)
+        replied = get_replied_user(reply)
         prompt = character + history + reply + user + \
             ": " + user_input + "\n" + bot + ": "
     stopping_strings = ["\n" + user + ":", user + ":", bot +
-                        ":", "You:", "@Ava", "User", "@" + user, "<|endoftext|>", "<|eot_id|>", "\nuser"] + eot
+                        ":", "You:", "@Ava", "User", "@" + user, "<|endoftext|>", "<|eot_id|>", "\nuser"] + eot + replied
     
     print(stopping_strings)
     data = text_api["parameters"]
@@ -402,6 +403,16 @@ def get_user_list(history):
     # Convert the list of matches to a set to remove duplicates
     unique_usernames = [username + ':' for username in set(matches)]
     
+    # Convert the set back to a sorted list (if sorting is needed)
+    return sorted(list(unique_usernames))
+
+def get_replied_user(reply):
+    pattern = r'[\w-]+(?=:)'
+    matches = re.findall(pattern, reply, flags=re.MULTILINE)
+    
+    # Convert the list of matches to a set to remove duplicates
+    unique_usernames = [username + ':' for username in set(matches)]
+    print(unique_usernames)
     # Convert the set back to a sorted list (if sorting is needed)
     return sorted(list(unique_usernames))
 
