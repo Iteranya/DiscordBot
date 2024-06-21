@@ -46,7 +46,7 @@ Cuz I got GBNF, take that corpo garbage!!!
 
 ### Additional configuration needed to run the bot
 - Discord API key in bot.py in the global variable
-- If using openai/mistral - API key in Bearer line in configuration/text-default.json
+~~- If using openai/mistral - API key in Bearer line in configuration/text-default.json~~
 - fill in characters/default.json with your character prompt
 - optionally in functions.py in function get_character() you can fill out the 'examples' array with examples of dialogue you want the bot to follow
 
@@ -70,8 +70,9 @@ Cheers!
 - [x] Make a better README.
 - [x] Add Webhook Support for more seamless Avatar Change
 - [x] Fixed the Webhook not detecting reply, (hopefully I don't get rate limited)
+- [ ] Refactor this whole entire mess...
 - [ ] Redo the character trigger and swapping system with webhook.
 - [ ] Implement GBNF for literal fucking Large Action Model feature.
 - [ ] Add more standard Discord Bot features. (music, games, moderation, etc.)
 - [ ] Enable support for ~~Character.ai~~, TavernAI, SillyTavern, etc. character formats.
-- [ ] Make switching between Koboldcpp or Oobabooga Textgen-ui more mainstream.
+- [ ] Make User Friendly UI to set shit up.
