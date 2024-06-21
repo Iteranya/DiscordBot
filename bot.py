@@ -355,7 +355,13 @@ async def get_reply(message):
         # Verify that the author of the message is bot and that it has a reply
         if referenced_message.reference is not None and referenced_message.author == client.user:
             # Grab that other reply as well
-            referenced_user_message = await message.channel.fetch_message(referenced_message.reference.message_id)
+            try:
+                referenced_user_message = await message.channel.fetch_message(referenced_message.reference.message_id)
+                # Process the fetched message as needed
+            except discord.NotFound:
+                # Handle the case where the message cannot be found
+                print("Message not found or access denied.")
+                return reply
 
             # If the author of the reply is not the same person as the initial user, we need this data
             if referenced_user_message.author != message.author:
@@ -895,9 +901,12 @@ async def character_select_callback(interaction):
     character_card = await functions.get_character_card(selection)
 
     # Change bot's nickname without changing its name
-    guild = interaction.guild
-    me = guild.me
-    await me.edit(nick=character_card["name"])
+
+    # guild = interaction.guild
+    # me = guild.me
+    # await me.edit(nick=character_card["name"])
+
+    # Ahhhhh... I hate this Janky Ass usage, come on!!! 
 
     # Let the user know that their request has been completed
     await interaction.followup.send(interaction.user.name + " updated the bot's personality to " + character_card["persona"] + ".")
