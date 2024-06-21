@@ -412,7 +412,6 @@ def get_replied_user(reply):
     
     # Convert the list of matches to a set to remove duplicates
     unique_usernames = [username + ':' for username in set(matches)]
-    print(unique_usernames)
     # Convert the set back to a sorted list (if sorting is needed)
     return sorted(list(unique_usernames))
 

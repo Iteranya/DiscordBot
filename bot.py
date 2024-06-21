@@ -225,6 +225,17 @@ async def bot_behavior(message):
     global bot_last_message_time
     global bot_last_mentioned_channel
 
+    reply = await get_reply(message)
+    replied = functions.get_replied_user(reply)
+    #If bot's words were being replied
+    if reply is not None and replied:
+        # print(str(replied[0]))
+        if str(replied[0])=="Ambruk-chan:":
+            #print(str(replied[0])+"Humu")
+            await bot_answer(message)
+            return True
+
+
 
     # If the bot wrote the message, update last message time
     if message.author == client.user:
@@ -250,6 +261,10 @@ async def bot_behavior(message):
                 await bot_answer(message)
                 return True
         return False
+    else:
+        print(message)
+
+    
 
 
 
@@ -347,7 +362,7 @@ async def bot_answer(message, image_description=None):
         reply = await get_reply(message)
         history = await functions.get_conversation_history(user, 15)
         prompt = await functions.create_text_prompt(user_input, user, character, character_card['name'], history, reply, text_api, image_description)
-
+    
     queue_item = {
         'prompt': prompt,
         'message': message,
