@@ -123,8 +123,13 @@ async def create_prompt_for_random_message(character, bot, text_api):
     data_string = json.dumps(data)
     return data_string
 
+async def create_lam_prompt(instruction, history):
+    #This is the fucker, will do tomorrow, it's already 1 AM. 
+    return
 
+#SYSTEM PROMPT OVER HERE!!! SERIOUSLY!!!!
 async def create_text_prompt(user_input, user, character, bot, history, reply, text_api, image_description=None):
+    
 
     if image_description:
         image_prompt = "[NOTE TO AI - USER MESSAGE CONTAINS AN IMAGE. IMAGE RECOGNITION HAS BEEN RUN ON THE IMAGE. DESCRIPTION OF THE IMAGE: " + \
@@ -132,11 +137,13 @@ async def create_text_prompt(user_input, user, character, bot, history, reply, t
         prompt = character + history + reply + user + ": " + \
             user_input + "\n" + image_prompt + "\n" + bot + ": "
     else:
+        eot = get_user_list(history)
         prompt = character + history + reply + user + \
             ": " + user_input + "\n" + bot + ": "
     stopping_strings = ["\n" + user + ":", user + ":", bot +
-                        ":", "You:", "@Ava", "User", "@" + user, "<|endoftext|>", "<|eot_id|>"]
-
+                        ":", "You:", "@Ava", "User", "@" + user, "<|endoftext|>", "<|eot_id|>", "\nuser"] + eot
+    
+    print(stopping_strings)
     data = text_api["parameters"]
 
     if text_api["name"] == "openai":
@@ -383,6 +390,20 @@ def get_file_list(directory):
     # Return either the list of files or a blank list.
     return files
 
+# Get the list of all possible Username from History and put that in an array, yknow, for EOT!!!
+
+def get_user_list(history):
+    # Define the regex pattern
+    pattern = r'(?<=\n)[\w-]+(?=:)'
+    
+    # Find all matches using the regex pattern
+    matches = re.findall(pattern, history, flags=re.MULTILINE)
+    
+    # Convert the list of matches to a set to remove duplicates
+    unique_usernames = [username + ':' for username in set(matches)]
+    
+    # Convert the set back to a sorted list (if sorting is needed)
+    return sorted(list(unique_usernames))
 
 def image_from_string(image_string):
 

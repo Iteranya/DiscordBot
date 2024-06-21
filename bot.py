@@ -66,7 +66,7 @@ character_card = {}
 # Global card for API information. Used with use_api_backend.
 text_api = {}
 image_api = {}
-
+#lam_api = {}
 status_last_update = None
 last_message_sent = datetime.datetime.now()
 
@@ -303,6 +303,9 @@ async def bot_behavior(message):
 
     return False
 
+async def bot_think(message):
+    
+    return
 
 async def bot_answer(message, image_description=None):
     # Mark the message as read (we know we're working on it)
@@ -617,6 +620,39 @@ def split_dialogue(dialogue: str, max_length) -> List[str]:
     dialogue_parts.reverse()
     return dialogue_parts
 
+# async def send_to_user_queue():
+#     while True:
+#         # Grab the reply that will be sent
+#         reply = await queue_to_send_message.get()
+
+#         if not reply["content"]["channel"]:
+#             # Add the message to user's history
+#             await functions.add_to_conversation_history(reply["response"], character_card["name"], reply["content"]["user"])
+
+#             # Update reactions
+#             await reply["content"]["message"].remove_reaction('✨', client.user)
+#             await reply["content"]["message"].add_reaction('✅')
+
+#         # Split the response into chunks of 1500 characters
+#         response = reply["response"]
+#         response_chunks = [response[i:i+1500] for i in range(0, len(response), 1500)]
+
+#         if not reply["content"]["image"]:
+#             if not reply["content"]["channel"]:
+#                 for chunk in response_chunks:
+#                     await reply["content"]["message"].channel.send(chunk, reference=reply["content"]["message"])
+#             else:
+#                 # Send random message on channel
+#                 print("Sending random message.")
+#                 for chunk in response_chunks:
+#                     await reply["content"]["channel"].send(chunk)
+#         else:
+#             image_file = discord.File(reply["image"])
+#             await reply["content"]["message"].channel.send(reply["response"], file=image_file, reference=reply["content"]["message"])
+#             os.remove(reply["image"])
+
+#         queue_to_send_message.task_done()
+
 async def send_to_user_queue():
     while True:
         # Grab the reply that will be sent
@@ -634,18 +670,36 @@ async def send_to_user_queue():
         response = reply["response"]
         response_chunks = [response[i:i+1500] for i in range(0, len(response), 1500)]
 
+        character_name = character_card["name"]  # Placeholder for character name
+        character_avatar_url = character_card["image"]  # Placeholder for character avatar URL
+
+        # Function to send messages using a webhook
+        async def send_webhook_message(channel, content, avatar_url, username):
+            webhook = await channel.create_webhook(name=username)
+            await webhook.send(content, username=username, avatar_url=avatar_url)
+            await webhook.delete()
+
         if not reply["content"]["image"]:
             if not reply["content"]["channel"]:
                 for chunk in response_chunks:
-                    await reply["content"]["message"].channel.send(chunk, reference=reply["content"]["message"])
+                    await send_webhook_message(reply["content"]["message"].channel, chunk, character_avatar_url, character_name)
             else:
                 # Send random message on channel
                 print("Sending random message.")
                 for chunk in response_chunks:
-                    await reply["content"]["channel"].send(chunk)
+                    await send_webhook_message(reply["content"]["channel"], chunk, character_avatar_url, character_name)
         else:
             image_file = discord.File(reply["image"])
-            await reply["content"]["message"].channel.send(reply["response"], file=image_file, reference=reply["content"]["message"])
+            # Since we need to send an image, we can't use webhooks directly to send files. Instead, we send the message first and then send the file.
+            if not reply["content"]["channel"]:
+                for chunk in response_chunks:
+                    await send_webhook_message(reply["content"]["message"].channel, chunk, character_avatar_url, character_name)
+                await reply["content"]["message"].channel.send(reply["response"], file=image_file, reference=reply["content"]["message"])
+            else:
+                for chunk in response_chunks:
+                    await send_webhook_message(reply["content"]["channel"], chunk, character_avatar_url, character_name)
+                await reply["content"]["channel"].send(reply["response"], file=image_file)
+
             os.remove(reply["image"])
 
         queue_to_send_message.task_done()
@@ -681,7 +735,8 @@ async def on_ready():
 
     text_api = await functions.set_api("text-default.json")
     image_api = await functions.set_api("image-default.json")
-
+    #lam_api = await functions.set_api("lam-default.json")
+    # Awwwh Yisss, this is the good stuff!!!
     if text_api["name"] != "openai":
         api_check = await functions.api_status_check(text_api["address"] + text_api["model"], headers=text_api["headers"])
 
