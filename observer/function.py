@@ -2,6 +2,8 @@
 import discord
 import re
 import util
+import os
+import json
 
 
 # For xtts2 TTS (now imported conditionally at the bottom of the script)
@@ -71,5 +73,27 @@ def get_replied_user(reply):
     unique_usernames = [username for username in set(matches)]
     # Convert the set back to a sorted list (if sorting is needed)
     return sorted(list(unique_usernames))
+
+async def get_bot_list():
+    names = []
+    folder_path = "./characters"
+    # Iterate over each file in the directory
+    for filename in os.listdir(folder_path):
+        file_path = os.path.join(folder_path, filename)
+        if filename.endswith('.json'):
+            # Read the JSON file
+            with open(file_path, 'r') as f:
+                try:
+                    # Load JSON data
+                    data = json.load(f)
+                    # Extract the name field and append to names list
+                    name = data.get('name')
+                    if name:
+                        names.append(name)
+                except json.JSONDecodeError as e:
+                    print(f"Error parsing {filename}: {e}")
+
+
+    return names
 
 

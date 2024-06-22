@@ -8,7 +8,7 @@ import discord
 ## Also the gateway to LAM
 
 async def bot_behavior(message:discord.Message, client:discord.Client):
-
+    botlist = await function.get_bot_list()
     reply = await function.get_reply(message, client)
     replied = function.get_replied_user(reply)
     print("Mark 1")
@@ -17,21 +17,21 @@ async def bot_behavior(message:discord.Message, client:discord.Client):
     #If bot's were being replied
     if reply is not None and replied:
         print("Mark 2")
-        botlist = ["Ambruk-chan","Mecanica"] # This fucker here, I need a function to retrieve all bot name. It's all in the characters folder in a json file.
+        #botlist = ["Ambruk-chan","Mecanica"] # This fucker here, I need a function to retrieve all bot name. It's all in the characters folder in a json file.
         for bot in list(botlist):
             print("Marks")
             print(replied[0])
             print(bot)
             if str(replied[0])==bot:
                 print("Mark 3")
-                await bot_think(message, bot.lower(), reply)
+                await bot_think(message, bot.lower(), "")
                 return True
 
     #TODO: This part is where there will be fuzzy logic if more than one character is mentioned. But that will come way later.
     # If bot's name is mentioned
     if message.webhook_id is None:
         lower_text = message.content.lower()
-        botlist = ["Ambruk-chan","Mecanica"] # Same here!
+        #botlist = ["Ambruk-chan","Mecanica"] # Same here!
 
         # Check for each word in the list if it is present in the text
         for bot in botlist:

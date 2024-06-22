@@ -12,7 +12,7 @@ async def get_conversation_history(user, lines):
     if contents is None:
         contents = ""
 
-    if length > 50:
+    if length > 100:
         await prune_text_file(file, 30)
 
     return contents
