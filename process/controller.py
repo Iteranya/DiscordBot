@@ -30,10 +30,7 @@ async def think(message:discord.Message, bot:str, reply:str):
         await convo(message,json_card, reply)
     return
 
-# Welp, Time To Redo This Sonuvabitch
-# ...
-# Tomorrow...
-# TODO
+# TODO Add the Multimodal Thingy so you can send your waifu MEEEEMMMSSSSS!!!!
 async def convo(message:discord.Message,json_card:dict[str,any],reply:str):
     user:str = message.author.display_name
     user = user.replace(" ", "")
