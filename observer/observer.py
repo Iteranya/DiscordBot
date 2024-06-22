@@ -17,7 +17,7 @@ async def bot_behavior(message:discord.Message, client:discord.Client):
     #If bot's were being replied
     if reply is not None and replied:
         print("Mark 2")
-        botlist = ["Ambruk-chan","Mecanica"] # Obviously we're not Hard Coding this, fucktard!
+        botlist = ["Ambruk-chan","Mecanica"] # This fucker here, I need a function to retrieve all bot name. It's all in the characters folder in a json file.
         for bot in list(botlist):
             print("Marks")
             print(replied[0])
