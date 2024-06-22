@@ -1,26 +1,7 @@
 # This is the Multi Modal Part
 # For now this will only support Image Recognition, but later on who knows???
-import os
-import discord
-from discord import app_commands
-import requests
 import json
-import asyncio
-import httpx
-import random
-import functions
-import datetime
-import base64
-import io
-import hashlib
-import re
-import unittest
-import logging
-import argparse
 
-from typing import List
-from pydub import AudioSegment
-from PIL import Image
 
 # For xtts2 TTS (now imported conditionally at the bottom of the script)
 # import torch
@@ -29,12 +10,6 @@ from PIL import Image
 # from TTS.tts.models.xtts import Xtts
 
 from aiohttp import ClientSession
-from aiohttp import ClientTimeout
-from aiohttp import TCPConnector
-from discord.ext import commands
-from discord import app_commands
-from discord import Interaction
-from dotenv import load_dotenv
 
 import util
 
@@ -88,17 +63,17 @@ async def read_image(message):
                         else:
                             # Handle unexpected status code
                             errorstr = f"Error: The server responded with an unexpected status code: {response.status}"
-                            await functions.write_to_log(errorstr)
+                            await util.write_to_log(errorstr)
                             return None
 
             else:
                 # If no image is found
-                await functions.write_to_log("No supported image attachments found.")
+                await util.write_to_log("No supported image attachments found.")
                 return None
 
     except Exception as e:
         # Handle any other exception that was not explicitly caught
         error_msg = f"An error occurred: {str(e)}"
-        await functions.write_to_log(error_msg)
+        await util.write_to_log(error_msg)
         return None
     return None
