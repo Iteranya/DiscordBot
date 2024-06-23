@@ -27,7 +27,7 @@ async def bot_behavior(message:discord.Message, client:discord.Client):
         text = message.content
 
         # Check if contains the word 'https://www.instagram.com'
-        if re.search("https://www.instagram.com",str(text)):
+        if re.search("https://www.instagram.com/p/",str(text)):
             await bot_action(message,reply)
             return True
 
