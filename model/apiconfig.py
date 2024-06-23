@@ -101,9 +101,8 @@ async def send_to_user_queue():
 
             if "simple_message" in llmreply:
                 print("This is a content item.")
+                await send_webhook_message(llmreply["simple_message"].channel, llmreply["simple_message"].content, llmreply["simple_message"].author.avatar.url, llmreply["simple_message"].author.display_name)
                 await llmreply["simple_message"].delete() #Comment this out to disable deleting part
-                await send_webhook_message(llmreply["simple_message"].channel, llmreply["simple_message"].content, default_character_url, default_character_name)
-
                 config.queue_to_send_message.task_done()
             else:
                 if not llmreply["content"]["channel"]:
