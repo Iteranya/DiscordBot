@@ -37,23 +37,33 @@ async def send_to_model_queue():
         timeout = ClientTimeout(total=600)
         connector = TCPConnector(limit_per_host=10)
         async with ClientSession(timeout=timeout, connector=connector) as session:
-            async with session.post(config.text_api["address"] + config.text_api["generation"], headers=config.text_api["headers"], data=content["prompt"]) as response:
-                if response.status == 200:
-                    try:
-                        json_response = await response.json()
-                        await llmresponse.handle_llm_response(content, json_response)
-                    except json.decoder.JSONDecodeError as e:
-                        # Handle the case where response is not JSON-formatted
-                        print(f"Failed to decode JSON response: {e}")
-                        text_response = await response.text()
-                        
-                        print(f"Response text was: {text_response}")
-                else:
-                    # Handle non-200 responses here
-                    print(
-                        f"HTTP request failed with status: {response.status}")
+            try:
+                async with session.post(config.text_api["address"] + config.text_api["generation"], headers=config.text_api["headers"], data=content["prompt"]) as response:
+                    if response.status == 200:
+                        try:
+                            json_response = await response.json()
+                            await llmresponse.handle_llm_response(content, json_response)
+                        except json.decoder.JSONDecodeError as e:
+                            # Handle the case where response is not JSON-formatted
+                            print(f"Failed to decode JSON response: {e}")
+                            text_response = await response.text()
+                            print(f"Response text was: {text_response}")
+                    else:
+                        # Handle non-200 responses here
+                        print(f"HTTP request failed with status: {response.status}")
 
                 config.queue_to_process_message.task_done()
+            except Exception as e:
+                # Handle any other exceptions
+                await handle_error_response(content,e)
+
+async def handle_error_response(content,e):
+    content["message"].content = "Bot's asleep, probably~ \nHere's the error code:" +str(e)
+    queue_item={
+        "text_message":content
+    }
+    config.queue_to_send_message.put_nowait(queue_item)
+
 
 async def send_to_stable_diffusion_queue():
     global image_api
@@ -100,10 +110,13 @@ async def send_to_user_queue():
             default_character_name = "Ambruk-GPT"
 
             if "simple_message" in llmreply:
-                print("This is a content item.")
+                
                 await send_webhook_message(llmreply["simple_message"].channel, llmreply["simple_message"].content, llmreply["simple_message"].author.avatar.url, llmreply["simple_message"].author.display_name)
                 config.queue_to_send_message.task_done()
                 await llmreply["simple_message"].delete() #Comment this out to disable deleting part
+            elif "text_message" in llmreply:
+                await send_webhook_message(llmreply["text_message"]["message"].channel, llmreply["text_message"]["message"].content,default_character_url, default_character_name)
+                config.queue_to_send_message.task_done()
             else:
                 if not llmreply["content"]["channel"]:
                     # Add the message to user's history
