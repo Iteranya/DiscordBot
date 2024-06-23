@@ -77,6 +77,18 @@ async def action(message,client,bot):
     # WIP
     return
 
+async def extras(message:discord.message,reply):
+    text = message
+    text.content = text.content.replace('instagram.com', 'picuki.me')
+
+    queue_item = {
+        "simple_message": text, 
+        }
+
+    config.queue_to_send_message.put_nowait(queue_item)
+    return
+
+# TODO: Put the function below somewhere else
 async def create_text_prompt(user_input, user, character, bot, history, reply, text_api, image_description=None):
 
     if image_description:

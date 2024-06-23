@@ -95,46 +95,56 @@ async def send_to_user_queue():
         while True:
             # Grab the reply that will be sent
             llmreply = await config.queue_to_send_message.get()
-            print("MADE IT HERE!!! AAAAAAAAA")
 
-            if not llmreply["content"]["channel"]:
-                # Add the message to user's history
-                await history.add_to_conversation_history(llmreply["response"], llmreply["content"]["character"]["name"], llmreply["content"]["user"])
+            default_character_url = "https://i.imgur.com/mxlcovm.png"
+            default_character_name = "Ambruk-GPT"
 
-                # Update reactions
-                await llmreply["content"]["message"].add_reaction('✅')
+            if "simple_message" in llmreply:
+                print("This is a content item.")
+                await llmreply["simple_message"].delete() #Comment this out to disable deleting part
+                await send_webhook_message(llmreply["simple_message"].channel, llmreply["simple_message"].content, default_character_url, default_character_name)
 
-            # Split the response into chunks of 1500 characters
-            response = llmreply["response"]
-            response_chunks = [response[i:i+1500] for i in range(0, len(response), 1500)]
-
-            character_name = llmreply["content"]["character"]["name"]  # Placeholder for character name
-            character_avatar_url = llmreply["content"]["character"]["image"]  # Placeholder for character avatar URL
-
-            if not llmreply["content"]["image"]:
-                if not llmreply["content"]["channel"]:
-                    for chunk in response_chunks:
-                        await send_webhook_message(llmreply["content"]["message"].channel, chunk, character_avatar_url, character_name)
-                else:
-                    # Send random message on channel
-                    print("Sending random message.")
-                    for chunk in response_chunks:
-                        await send_webhook_message(llmreply["content"]["channel"], chunk, character_avatar_url, character_name)
+                config.queue_to_send_message.task_done()
             else:
-                image_file = discord.File(llmreply["image"])
-                # Since we need to send an image, we can't use webhooks directly to send files. Instead, we send the message first and then send the file.
                 if not llmreply["content"]["channel"]:
-                    for chunk in response_chunks:
-                        await send_webhook_message(llmreply["content"]["message"].channel, chunk, character_avatar_url, character_name)
-                    await llmreply["content"]["message"].channel.send(llmreply["response"], file=image_file, reference=llmreply["content"]["message"])
+                    # Add the message to user's history
+                    await history.add_to_conversation_history(llmreply["response"], llmreply["content"]["character"]["name"], llmreply["content"]["user"])
+
+                    # Update reactions
+                    await llmreply["content"]["message"].add_reaction('✅')
+
+                # Split the response into chunks of 1500 characters
+                response = llmreply["response"]
+                response_chunks = [response[i:i+1500] for i in range(0, len(response), 1500)]
+
+                character_name = llmreply["content"]["character"]["name"]  # Placeholder for character name
+                character_avatar_url = llmreply["content"]["character"]["image"]  # Placeholder for character avatar URL
+                
+
+                if not llmreply["content"]["image"]:
+                    if not llmreply["content"]["channel"]:
+                        for chunk in response_chunks:
+                            await send_webhook_message(llmreply["content"]["message"].channel, chunk, character_avatar_url, character_name)
+                    else:
+                        # Send random message on channel
+                        print("Sending random message.")
+                        for chunk in response_chunks:
+                            await send_webhook_message(llmreply["content"]["channel"], chunk, character_avatar_url, character_name)
                 else:
-                    for chunk in response_chunks:
-                        await send_webhook_message(llmreply["content"]["channel"], chunk, character_avatar_url, character_name)
-                    await llmreply["content"]["channel"].send(llmreply["response"], file=image_file)
+                    image_file = discord.File(llmreply["image"])
+                    # Since we need to send an image, we can't use webhooks directly to send files. Instead, we send the message first and then send the file.
+                    if not llmreply["content"]["channel"]:
+                        for chunk in response_chunks:
+                            await send_webhook_message(llmreply["content"]["message"].channel, chunk, character_avatar_url, character_name)
+                        await llmreply["content"]["message"].channel.send(llmreply["response"], file=image_file, reference=llmreply["content"]["message"])
+                    else:
+                        for chunk in response_chunks:
+                            await send_webhook_message(llmreply["content"]["channel"], chunk, character_avatar_url, character_name)
+                        await llmreply["content"]["channel"].send(llmreply["response"], file=image_file)
 
-                os.remove(llmreply["image"])
+                    os.remove(llmreply["image"])
 
-            config.queue_to_send_message.task_done()
+                config.queue_to_send_message.task_done()
 
   # Function to send messages using a webhook
 async def send_webhook_message(channel, content, avatar_url, username):
@@ -165,7 +175,7 @@ async def api_status_check(link, headers):
         response = requests.get(link, headers=headers)
         status = response.ok
     except requests.exceptions.RequestException as e:
-        await util.write_to_log("Error occurred: " + e + ". Language model not currently running.")
+        print("Error occurred Language model not currently running.")
         status = False
 
     return status

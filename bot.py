@@ -45,11 +45,10 @@ async def on_ready():
     asyncio.create_task(apiconfig.send_to_user_queue())
 
     # Sync current slash commands (commented out unless we have new commands)
-    tree.add_command(personality)
-    tree.add_command(history)
-    tree.add_command(character)
-    tree.add_command(parameters)
-    await tree.sync()
+    # tree.add_command(personality)
+    # tree.add_command(history)
+    # tree.add_command(character)
+    # await tree.sync()
 
     print(f'Discord Bot is up and running.')
 
@@ -153,91 +152,6 @@ character = app_commands.Group(
 
 # Command to view a list of available characters.
 
-
-@character.command(name="change", description="View a list of current character presets.")
-async def change_character(interaction):
-
-    # Get a list of available character cards
-    character_cards = util.get_file_list("characters")
-    options = []
-
-    # Verify the list is not currently empty
-    if not character_cards:
-        await interaction.response.send_message("No character cards are currently available.")
-        return
-
-    # Create the selector list with all the available options.
-    for card in character_cards:
-        options.append(discord.SelectOption(label=card, value=card))
-
-    select = discord.ui.Select(
-        placeholder="Select a character card.", options=options)
-    select.callback = character_select_callback
-    view = discord.ui.View()
-    view.add_item(select)
-
-    # Show the dropdown menu to the user
-    await interaction.response.send_message('Select a character card', view=view, ephemeral=True)
-
-
-async def character_select_callback(interaction):
-
-    await interaction.response.defer()
-
-    # Get the value selected by the user via the dropdown.
-    selection = interaction.data.get("values", [])[0]
-
-    # Adjust the character card for the bot to match what the user selected.
-    global character_card
-
-    #character_card = await charutil.get_character_prompt(selection)
-
-    # Change bot's nickname without changing its name
-
-    # guild = interaction.guild
-    # me = guild.me
-    # await me.edit(nick=character_card["name"])
-
-    # Ahhhhh... I hate this Janky Ass usage, come on!!! 
-
-    # Let the user know that their request has been completed
-    await interaction.followup.send(interaction.user.name + " updated the bot's personality to " + character_card["persona"] + ".")
-
-
-# Slash commands for character card presets (if not interested in manually updating)
-parameters = app_commands.Group(
-    name="model-parameters", description="View or changes the bot's current LLM generation parameters.")
-
-# Command to view a list of available characters.
-
-#TODO: Figure out the purpose of this or even if I need it...
-# @parameters.command(name="change", description="View a list of available generation parameters.")
-# async def change_parameters(interaction):
-
-#     # Get a list of available character cards
-#     presets = functions.get_file_list("configurations")
-#     options = []
-
-#     # Verify the list is not currently empty
-#     if not presets:
-#         await interaction.response.send_message("No configurations are currently available. Please contact the bot owner.")
-#         return
-
-#     # Create the selector list with all the available options.
-#     for preset in presets:
-#         if preset.startswith("text"):
-#             options.append(discord.SelectOption(label=config.card, value=card))
-
-#     select = discord.ui.Select(
-#         placeholder="Select a character card.", options=options)
-#     select.callback = parameter_select_callback
-#     view = discord.ui.View()
-#     view.add_item(select)
-
-#     # Show the dropdown menu to the user
-#     await interaction.response.send_message('Select a character card', view=view, ephemeral=True)
-
-
 async def parameter_select_callback(interaction):
 
     await interaction.response.defer()
@@ -258,15 +172,6 @@ parser.add_argument('--tts_xtts', action='store_true',
                     help='Flag to disable TTS (XTTS)')
 args = parser.parse_args()
 enable_tts_global = args.tts_xtts
-
-# if enable_tts_global:
-#     print("Running with XTTS")
-#     print("Loading XTTS libraries...")
-#     import torch
-#     import torchaudio
-#     from TTS.tts.configs.xtts_config import XttsConfig
-#     from TTS.tts.models.xtts import Xtts
-#     print("XTTS libraries imported.")
 
 client.run(discord_token)
 # unittest.main()
