@@ -9,10 +9,6 @@ No, no, nothing weird with this fork. Just a little bit of improvement here and 
 Download Koboldcpp here:
 [Koboldcpp](https://github.com/LostRuins/koboldcpp)
 
-If you want to generate images, you'll also need Automatic1111 Stable Diffusion runing with --listen and --api optons enabled on launch.
-Download Automatic1111 here:
-[Automatic1111](https://github.com/AUTOMATIC1111/stable-diffusion-webui)
-
 If you want to be cultured, you'll also need to download one of these bad boys~
 
 - [Stheno](https://huggingface.co/Lewdiculous/L3-8B-Stheno-v3.1-GGUF-IQ-Imatrix) 
