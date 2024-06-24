@@ -77,7 +77,7 @@ async def action(message,client,bot):
     # WIP
     return
 
-async def extras(message:discord.message,reply):
+async def instagram_picuki_extras(message:discord.message,reply):
     text = message
     text.content = text.content.replace('instagram.com', 'picuki.me')
 
@@ -99,12 +99,15 @@ async def create_text_prompt(user_input, user, character, bot, history, reply, t
     else:
         eot = function.get_user_list(history)
         eot = add_colon_to_strings(eot)
+        botlist = await function.get_bot_list()
+        botlist = add_colon_to_strings(botlist)
         replied = function.get_replied_user(reply)
         replied = add_colon_to_strings(replied)
+        jb = "[Note: You are speaking in a Discord group chat with some people in the chat. ]\n"
         prompt = character + history + reply + user + \
             ": " + user_input + "\n" + bot + ": "
     stopping_strings = ["\n" + user + ":", user + ":", bot +
-                        ":", "You:", "@Ava", "User", "@" + user, "<|endoftext|>", "<|eot_id|>", "\nuser"] + eot + replied
+                        ":", "You:", "@Ava", "User", "@" + user, "<|endoftext|>", "<|eot_id|>", "\nuser"] + eot + replied + botlist
     
     print(stopping_strings)
     data = text_api["parameters"]

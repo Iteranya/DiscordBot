@@ -21,21 +21,22 @@ async def bot_behavior(message:discord.Message, client:discord.Client):
                 await bot_think(message, bot.lower(), "")
                 return True
 
-    #TODO: This part is where there will be fuzzy logic if more than one character is mentioned. But that will come way later.
-    # If bot's name is mentioned
+    #The Fuzzy Logic Part~
     if message.webhook_id is None:
         text = message.content
-
-        # Check if contains the word 'https://www.instagram.com'
-        if re.search("https://www.instagram.com/p/",str(text)):
-            await bot_action(message,reply)
+        if message.channel.type == discord.ChannelType.public_thread or message.channel.type == discord.ChannelType.private_thread:
             return True
 
-        # Check for each word in the list if it is present in the text
+         # Check for each word in the list if it is present in the text
         for bot in botlist:
             if re.search(bot.lower(), text.lower()):
                 await bot_think(message, bot.lower(), reply)
                 return True
+
+        # Check if contains the word 'https://www.instagram.com'
+        if re.search("https://www.instagram.com/p/",str(text)):
+            await instagram_replace(message,reply)
+            return True
         
         return False
 
@@ -45,6 +46,6 @@ async def bot_think(message:discord.Message, bot:str, reply:str):
     await controller.think(message,bot, reply)
     return
 
-async def bot_action(message:discord.Message,reply:str):
-    await controller.extras(message, reply)
+async def instagram_replace(message:discord.Message,reply:str):
+    await controller.instagram_picuki_extras(message, reply)
     return 
