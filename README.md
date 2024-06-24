@@ -26,15 +26,6 @@ If you want to be cultured, you'll also need to download one of these bad boys~
 Nonsense! I don't need XTTS to speak with all of you! 
 Unless... You want me to make an ASMR? Muehehe~
 
-### LLAVA image recognition
-- The bot supports Llava image recognition - you can send the bot an image and it will describe it and refer to it.
-- if you dont use this feature, no need to have llava running
-- otherwise, get llamacpp portable binaries and have this running in a terminal:
-```
-./server.exe -c 2048 -ngl 43 -nommq -m ./models/ggml-model-q4_k.gguf --host 0.0.0.0 --port 8007 --mmproj ./models/mmproj-model-f16.gguf
-```
-- the ggml models files you can get from Llava repo, also ShareGPT would also work
-
 ### Stable Diffusion
 ~~- bot supports stable diffusion but I recommend using SDXL as the bot will send a prompt to SD in natural language and previous SD (like SD1.5) would struggle~~
 
@@ -75,5 +66,24 @@ Cheers!
 - [x] Redo the character trigger and swapping system with webhook.
 - [ ] Implement GBNF for literal fucking Large Action Model feature.
 - [ ] Add more standard Discord Bot features. (music, games, moderation, etc.)
-- [ ] Enable support for ~~Character.ai~~, TavernAI, SillyTavern, etc. character formats.
+- [ ] Enable support for ~~Character.ai~~, TavernAI, SillyTavern, etc. character formats. (currently not practical)
 - [ ] Make User Friendly UI to set shit up.
+
+## Known Issue:
+- Character Memory 
+  - There's no easy way to tweak what character remembers (obviously, the interface is Discord)
+  - Character has a separate memory for each user (So like, it's similar to a DM with a group of AI)
+  - Character can't see the content of the channel (I'm planning to add the 'AI Channel' feature where you can have a channel that is being logged by the bot and everything in the history of it is visible to the AI... If possible)
+- Cannot Reply In Thread
+  - Skill Issue on my part, will figure it out later
+- No Slash Command
+  - Not necessarily an issue, but all setup happens in the code, I want to add more slash command to change stuff like API Access, System Prompt, Editing Character Definition, Making New Character, and such. 
+- Terrible Documentation
+  - As in like, I did not make any proper Github Commit Comment :v
+  - Honestly this whole thing started as a joke, if you see the Read Me file, it's all just irony
+  - I never expected it to work this well
+- System Prompt
+  - System Prompt is just awful, the instruction sent to the AI is still designed for RP and not Discord Chat
+  - Excessive use of Emoji, Kaomoji, and all that stuff
+
+Yeah that's all the current issue.
