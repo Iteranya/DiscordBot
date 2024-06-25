@@ -35,13 +35,13 @@ async def convo(message:discord.Message,json_card:dict[str,any],reply:str):
     user:str = message.author.display_name
     user = user.replace(" ", "")
 
-    image_description = await multimodal.read_image(message)
+    #image_description = await multimodal.read_image(message)
 
     # Clean the user's message to make it easy to read
     user_input = util.clean_user_message(message.clean_content)
     character_prompt = await charutil.get_character_prompt(json_card)
-    context = await history.get_conversation_history(user, 15)
-
+    #context = await history.get_conversation_history(user, 15)
+    context = await history.get_channel_history(message.channel)
     #check everything
 
     if (isinstance(user_input, str) and

@@ -101,11 +101,10 @@ async def send_to_stable_diffusion_queue():
 
         config.queue_to_process_image.task_done()
 
-async def send_to_user_queue():
+async def send_to_discord_queue():
         while True:
             # Grab the reply that will be sent
             llmreply = await config.queue_to_send_message.get()
-            webhook_id = llmreply["content"]["message"].webhook_id
 
             default_character_url = "https://i.imgur.com/mxlcovm.png"
             default_character_name = "Ambruk-GPT"
@@ -114,7 +113,7 @@ async def send_to_user_queue():
                 
                 await send_webhook_message(llmreply["simple_message"].channel, llmreply["simple_message"].content, llmreply["simple_message"].author.avatar.url, llmreply["simple_message"].author.display_name)
                 config.queue_to_send_message.task_done()
-                await llmreply["simple_message"].delete() #Comment this out to disable deleting part
+                #await llmreply["simple_message"].delete() #Comment this out to disable deleting part
             elif "text_message" in llmreply:
                 await send_webhook_message(llmreply["text_message"]["message"].channel, llmreply["text_message"]["message"].content,default_character_url, default_character_name)
                 config.queue_to_send_message.task_done()
@@ -132,27 +131,26 @@ async def send_to_user_queue():
 
                 character_name = llmreply["content"]["character"]["name"]  # Placeholder for character name
                 character_avatar_url = llmreply["content"]["character"]["image"]  # Placeholder for character avatar URL
-                
 
                 if not llmreply["content"]["image"]:
                     if not llmreply["content"]["channel"]:
                         for chunk in response_chunks:
-                            await send_webhook_message(llmreply["content"]["message"].channel, chunk, character_avatar_url, character_name, webhook_id)
+                            await send_webhook_message(llmreply["content"]["message"].channel, chunk, character_avatar_url, character_name)
                     else:
                         # Send random message on channel
                         print("Sending random message.")
                         for chunk in response_chunks:
-                            await send_webhook_message(llmreply["content"]["channel"], chunk, character_avatar_url, character_name, webhook_id)
+                            await send_webhook_message(llmreply["content"]["channel"], chunk, character_avatar_url, character_name)
                 else:
                     image_file = discord.File(llmreply["image"])
                     # Since we need to send an image, we can't use webhooks directly to send files. Instead, we send the message first and then send the file.
                     if not llmreply["content"]["channel"]:
                         for chunk in response_chunks:
-                            await send_webhook_message(llmreply["content"]["message"].channel, chunk, character_avatar_url, character_name, webhook_id)
+                            await send_webhook_message(llmreply["content"]["message"].channel, chunk, character_avatar_url, character_name)
                         await llmreply["content"]["message"].channel.send(llmreply["response"], file=image_file, reference=llmreply["content"]["message"])
                     else:
                         for chunk in response_chunks:
-                            await send_webhook_message(llmreply["content"]["channel"], chunk, character_avatar_url, character_name, webhook_id)
+                            await send_webhook_message(llmreply["content"]["channel"], chunk, character_avatar_url, character_name)
                         await llmreply["content"]["channel"].send(llmreply["response"], file=image_file)
 
                     os.remove(llmreply["image"])
@@ -160,7 +158,7 @@ async def send_to_user_queue():
                 config.queue_to_send_message.task_done()
 
   # Function to send messages using a webhook
-async def send_webhook_message(channel, content, avatar_url, username, webhook_id):
+async def send_webhook_message(channel, content, avatar_url, username):
     webhook_list = await channel.webhooks()
 
     for webhook in webhook_list:

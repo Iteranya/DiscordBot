@@ -3,6 +3,7 @@ import re
 import process.controller as controller
 from observer import function
 import discord
+from process import history
 
 # This is the main code that deals with determining what type of request is being given.
 ## Also the gateway to LAM
@@ -15,7 +16,6 @@ async def bot_behavior(message:discord.Message, client:discord.Client):
 
     #If bot's were being replied
     if reply is not None and replied:
-        #botlist = ["Ambruk-chan","Mecanica"] # This fucker here, I need a function to retrieve all bot name. It's all in the characters folder in a json file.
         for bot in list(botlist):
             if str(replied[0])==bot:
                 await bot_think(message, bot.lower(), "")
@@ -36,6 +36,11 @@ async def bot_behavior(message:discord.Message, client:discord.Client):
         # Check if contains the word 'https://www.instagram.com'
         if re.search("https://www.instagram.com/p/",str(text)):
             await instagram_replace(message,reply)
+            return True
+        
+        # Check if contains the word 'Debugus Starticus!'
+        if re.search("Debugus Starticus!",str(text)):
+            await history.get_channel_history(message.channel)
             return True
         
         return False

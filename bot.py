@@ -16,6 +16,7 @@ from dotenv import load_dotenv
 from observer import observer
 from model import apiconfig
 from interface import main
+from process import history
 load_dotenv()
 discord_token:str = os.getenv("DISCORD_TOKEN")
 
@@ -41,7 +42,7 @@ async def on_ready():
     # Setup the 'tasks' that will be queued
     asyncio.create_task(apiconfig.send_to_model_queue())
     asyncio.create_task(apiconfig.send_to_stable_diffusion_queue())
-    asyncio.create_task(apiconfig.send_to_user_queue())
+    asyncio.create_task(apiconfig.send_to_discord_queue())
 
     # Command to Edit Message (You Right Click On It)
     edit_message = discord.app_commands.ContextMenu(
@@ -63,6 +64,8 @@ async def on_ready():
 
     await tree.sync()
     print(f'Discord Bot is up and running.')
+
+
 
 @client.event
 async def on_message(message):
