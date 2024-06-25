@@ -13,7 +13,7 @@ import json
 # from TTS.tts.models.xtts import Xtts
 
 
-async def get_reply(message:discord.Message, client:discord.Client):
+async def get_reply(message: discord.Message, client: discord.Client):
     reply = ""
 
     # If the message reference is not none, meaning someone is replying to a message
@@ -62,7 +62,7 @@ async def get_reply(message:discord.Message, client:discord.Client):
     return reply
 
 
-def get_user_list(history):
+def get_user_list(history: str) -> list[str]:
     # Define the regex pattern
     pattern = r'(?<=\n)[\w-]+(?=:)'
     
@@ -75,7 +75,7 @@ def get_user_list(history):
     # Convert the set back to a sorted list (if sorting is needed)
     return sorted(list(unique_usernames))
 
-def get_replied_user(reply):
+def get_replied_user(reply: str) -> list[str]:
     pattern = r'[\w-]+(?=:)'
     matches = re.findall(pattern, reply, flags=re.MULTILINE)
     
@@ -84,7 +84,7 @@ def get_replied_user(reply):
     # Convert the set back to a sorted list (if sorting is needed)
     return sorted(list(unique_usernames))
 
-async def get_bot_list():
+async def get_bot_list() -> list[str]:
     names = []
     folder_path = "./characters"
     # Iterate over each file in the directory
@@ -103,7 +103,4 @@ async def get_bot_list():
                 except json.JSONDecodeError as e:
                     print(f"Error parsing {filename}: {e}")
 
-
     return names
-
-
