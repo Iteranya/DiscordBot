@@ -8,10 +8,9 @@ from PIL import Image
 import io
 import datetime
 
-def clean_user_message(user_input:str):
-
+def clean_user_message(user_input: str) -> str:
     # Remove the bot's tag from the input since it's not needed.
-    user_input:str = user_input.replace("@Kobold", "")
+    user_input = user_input.replace("@Kobold", "")
 
     user_input = user_input.replace("<|endoftext|>", "")
 
@@ -21,9 +20,7 @@ def clean_user_message(user_input:str):
     return user_input
 
 # Mistral-medium hallucinates some stuff in parentheses on newlines and then it hallucinates more
-
-
-def truncate_from_newline_parenthesis(text):
+def truncate_from_newline_parenthesis(text: str) -> str:
     # This regex pattern matches an open parenthesis at the start of any line within the text
     pattern = r'^\('
 
@@ -35,28 +32,24 @@ def truncate_from_newline_parenthesis(text):
         return text[:match.start()]
     else:
         return text
-    
-def encode_image_to_base64(image_bytes):
+
+def encode_image_to_base64(image_bytes: bytes) -> str:
     return base64.b64encode(image_bytes).decode('utf-8')
 
-
-async def convert_webp_bytes_to_png(image_bytes):
+async def convert_webp_bytes_to_png(image_bytes: bytes) -> bytes:
     with io.BytesIO(image_bytes) as image_file:
         with Image.open(image_file) as img:
             output_buffer = io.BytesIO()
             img.save(output_buffer, format="PNG")
             return output_buffer.getvalue()
-        
 
-
-def get_file_name(directory, file_name):
-
+def get_file_name(directory: str, file_name: str) -> str:
     # Create the file path from name and directory and return that information
     filepath = os.path.join(directory, file_name)
     return filepath
 
 # Read in a JSON file and spit it out, usefully or "None" if file's not there or we have an issue
-def clean_username(username):
+def clean_username(username: str) -> str:
     # Replace invalid characters with an underscore
     cleaned_username = re.sub(r'[<>:"/\\|?*]', '_', username)
 
@@ -64,8 +57,7 @@ def clean_username(username):
     cleaned_username = cleaned_username.rstrip('. ')
     return cleaned_username
 
-async def get_json_file(filename):
-
+async def get_json_file(filename: str) -> str | None:
     # Try to go read the file!
     try:
         with open(filename, 'r') as file:
@@ -81,13 +73,11 @@ async def get_json_file(filename):
         return None
     # Be super sad if we have no idea what's going on here
     except Exception as e:
-        await write_to_log("An unexpected error occurred: " + e)
+        await write_to_log(f"An unexpected error occurred: {e}")
         return None
 
 # Write a line to the log file
-
-
-async def write_to_log(information):
+async def write_to_log(information: str) -> None:
     file = get_file_name("", "log.txt")
 
     # Add a time stamp to the provided error message
@@ -97,31 +87,13 @@ async def write_to_log(information):
 
     await append_text_file(file, text)
 
-async def append_text_file(file, text):
+async def append_text_file(file: str, text: str) -> None:
 
     with open(file, 'a+', encoding="utf-8") as context:
         context.write(text)
         context.close()
 
-async def write_to_log(information):
-    file = get_file_name("", "log.txt")
-
-    # Add a time stamp to the provided error message
-    current_time = datetime.datetime.now()
-    rounded_time = current_time.replace(microsecond=0)
-    text = str(rounded_time) + " " + information + "\n"
-
-    await append_text_file(file, text)
-
-
-def get_file_name(directory, file_name):
-
-    # Create the file path from name and directory and return that information
-    filepath = os.path.join(directory, file_name)
-    return filepath
-
-def get_file_list(directory):
-
+def get_file_list(directory: str) -> list[str]:
     # Try to get the list of character files from the directory provided.
     try:
         dir_path = directory + "\\"
