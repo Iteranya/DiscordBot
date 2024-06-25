@@ -23,6 +23,7 @@ async def handle_llm_response(content, response):
     if not data:
         return
     cleaned_data:str = remove_last_word_before_final_colon(data)
+    cleaned_data = remove_string_before_final(cleaned_data)
     llm_message = cleaned_data
     
     queue_item = {
@@ -46,3 +47,13 @@ def remove_last_word_before_final_colon(text):
     result = re.sub(pattern, '', text)
     
     return result.strip()  # Remove any leading or trailing whitespace
+
+
+def remove_string_before_final(data):
+    # Check if the data ends with the trim string
+    trim = "[System"
+    if data.endswith(trim):
+        # If it does, remove the trim string from the end
+        return data[:-len(trim)]
+    # If not, return the original data
+    return data
