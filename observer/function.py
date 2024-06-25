@@ -19,18 +19,28 @@ async def get_reply(message:discord.Message, client:discord.Client):
     # If the message reference is not none, meaning someone is replying to a message
     if message.reference is not None:
         # Grab the message that's being replied to
-        referenced_message = await message.channel.fetch_message(message.reference.message_id)
+        referenced_message = message.reference.cached_message
+        if referenced_message is None:
+            if message.reference.message_id is None:
+                print("Message ID is null")
+                return reply
+            referenced_message = await message.channel.fetch_message(message.reference.message_id)
 
         # Verify that the author of the message is bot and that it has a reply
         if referenced_message.reference is not None and referenced_message.author == client.user:
             # Grab that other reply as well
-            try:
-                referenced_user_message = await message.channel.fetch_message(referenced_message.reference.message_id)
-                # Process the fetched message as needed
-            except discord.NotFound:
-                # Handle the case where the message cannot be found
-                print("Message not found or access denied.")
-                return reply
+            referenced_user_message = referenced_message.reference.cached_message
+            if referenced_user_message is None:
+                if referenced_message.reference.message_id is None:
+                    print("Message ID is null")
+                    return reply
+                try:
+                    referenced_user_message = await message.channel.fetch_message(referenced_message.reference.message_id)
+                    # Process the fetched message as needed
+                except discord.NotFound:
+                    # Handle the case where the message cannot be found
+                    print("Message not found or access denied.")
+                    return reply
 
             # If the author of the reply is not the same person as the initial user, we need this data
             if referenced_user_message.author != message.author:
