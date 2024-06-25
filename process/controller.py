@@ -106,7 +106,7 @@ async def create_text_prompt(user_input, user, character, bot, history, reply, t
         jb = "[Sytem Note: The following reply will be written in 4 paragraphs or less without additional metacommentary]\n"
         prompt = character + history + reply + user + \
             ": " + user_input + "\n" + bot + ": "
-    stopping_strings = ["\n" + user + ":", user + ":", bot +
+    stopping_strings = ["\n" + user + ":","[System", user + ":", bot +
                         ":", "You:", "@Ava", "User", "@" + user, "<|endoftext|>", "<|eot_id|>", "\nuser"] + eot + replied + botlist
     
     print(stopping_strings)
