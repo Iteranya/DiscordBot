@@ -1,14 +1,4 @@
-__pycache__
 ./xtts
 .env
 log.txt
-model/__pycache__/apiconfig.cpython-310.pyc
-model/__pycache__/llmresponse.cpython-310.pyc
-observer/__pycache__/function.cpython-310.pyc
-observer/__pycache__/observer.cpython-310.pyc
-process/__pycache__/charutil.cpython-310.pyc
-process/__pycache__/controller.cpython-310.pyc
-process/__pycache__/history.cpython-310.pyc
-process/__pycache__/multimodal.cpython-310.pyc
-__pycache__/util.cpython-310.pyc
-__pycache__/config.cpython-310.pyc
+*.py[cod]
