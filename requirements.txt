@@ -1,6 +1,6 @@
 llama-cpp-python
 llama-cpp-python[server]
-discord
+discord.py
 httpx
 pillow
 requests
