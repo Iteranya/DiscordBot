@@ -23,10 +23,6 @@ async def send_to_model_queue():
         content = await config.queue_to_process_message.get()
         await util.write_to_log("send_to_model_queue()")
 
-        # Add the message to the user's history (if this is a reply)
-        if not content['channel']:
-            await history.add_to_conversation_history(content["user_input"], content["user"], content["user"])
-
         # Grab the data JSON we want to send it to the LLM
         if not content['channel']:
             await util.write_to_log("Sending prompt from " + content["user"] + " to LLM model.")
@@ -114,13 +110,12 @@ async def send_to_discord_queue():
                 await send_webhook_message(llmreply["simple_message"].channel, llmreply["simple_message"].content, llmreply["simple_message"].author.avatar.url, llmreply["simple_message"].author.display_name)
                 config.queue_to_send_message.task_done()
                 #await llmreply["simple_message"].delete() #Comment this out to disable deleting part
+            
             elif "text_message" in llmreply:
                 await send_webhook_message(llmreply["text_message"]["message"].channel, llmreply["text_message"]["message"].content,default_character_url, default_character_name)
                 config.queue_to_send_message.task_done()
             else:
                 if not llmreply["content"]["channel"]:
-                    # Add the message to user's history
-                    await history.add_to_conversation_history(llmreply["response"], llmreply["content"]["character"]["name"], llmreply["content"]["user"])
 
                     # Update reactions
                     await llmreply["content"]["message"].add_reaction('✅')
@@ -162,11 +157,11 @@ async def send_webhook_message(channel, content, avatar_url, username):
     webhook_list = await channel.webhooks()
 
     for webhook in webhook_list:
-        if webhook.name == username:
+        if webhook.name == "AktivaAI":
             await webhook.send(content, username=username, avatar_url=avatar_url)
             return
 
-    webhook = await channel.create_webhook(name=username)
+    webhook = await channel.create_webhook(name="AktivaAI")
     await webhook.send(content, username=username, avatar_url=avatar_url)
     #await webhook.delete()
 

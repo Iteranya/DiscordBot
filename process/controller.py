@@ -94,7 +94,7 @@ async def create_text_prompt(user_input, user, character, bot, history, reply, t
     if image_description:
         image_prompt = "[NOTE TO AI - USER MESSAGE CONTAINS AN IMAGE. IMAGE RECOGNITION HAS BEEN RUN ON THE IMAGE. DESCRIPTION OF THE IMAGE: " + \
             image_description.capitalize() + "]"
-        prompt = character + history + reply + user + ": " + \
+        prompt = character + history + user + ": " + \
             user_input + "\n" + image_prompt + "\n" + bot + ": "
     else:
         eot = function.get_user_list(history)

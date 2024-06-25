@@ -27,7 +27,7 @@ image_api:dict = {}
 # Dictionary to keep track of the bot's last message time and last mentioned channel by guild
 bot_last_message_time = {}
 bot_last_mentioned_channel = {}
-intents: discord.Intents = discord.Intents.default()
+intents: discord.Intents = discord.Intents.all()
 intents.message_content = True
 client:discord.Client = discord.Client(command_prefix='/', intents=intents)
 
