@@ -103,7 +103,7 @@ async def create_text_prompt(user_input, user, character, bot, history, reply, t
         botlist = add_colon_to_strings(botlist)
         replied = function.get_replied_user(reply)
         replied = add_colon_to_strings(replied)
-        jb = "[Note: You are speaking in a Discord group chat with some people in the chat. ]\n"
+        jb = "[Sytem Note: The following reply will be written in 4 paragraphs or less without additional metacommentary]\n"
         prompt = character + history + reply + user + \
             ": " + user_input + "\n" + bot + ": "
     stopping_strings = ["\n" + user + ":", user + ":", bot +
