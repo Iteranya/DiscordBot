@@ -1,4 +1,6 @@
 ./xtts
 .env
+.venv
+venv
 log.txt
 *.py[cod]
