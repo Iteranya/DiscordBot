@@ -36,6 +36,7 @@ Cuz I got GBNF, take that corpo garbage!!!
 - Discord API key in bot.py in the global variable
 ~~- If using openai/mistral - API key in Bearer line in configuration/text-default.json~~
 - fill in characters/default.json with your character prompt
+- Or just, yknow, make lots and lots of character  json file!!! Refer to characters/default.json for example
 - optionally in functions.py in function get_character() you can fill out the 'examples' array with examples of dialogue you want the bot to follow
 
 
