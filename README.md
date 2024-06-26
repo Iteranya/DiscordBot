@@ -24,12 +24,13 @@ Still a work in progress, but I will definitely not be sending prompt to SD in N
 Cuz I got GBNF, take that corpo garbage!!!
 
 ### Koboldcpp, OpenAI API, Mistral API
-- The bot supports koboldcpp API ~~but also OpenAI-compatible backends. Look in configurations folder for examples. Put your API key in the~~ ~~'Bearer' line~~ ClosedAI, Anthropic, and Google can \[REDACTED\] MY \[DATA EXPUNGED\] and \[CENSORED\] you hear me?! \[EXPLICITIVES REMOVED\]YA'LL!!!
-
+- The bot supports koboldcpp API
+- ~~but also OpenAI-compatible backends. Look in configurations folder for examples. Put your API key in the~~ ~~'Bearer' line~~ Ahaha! No, never.
 ### Additional configuration needed to run the bot
 - Discord API key in .env in the global variable
 - fill in characters/default.json with your character prompt
 - Or just, yknow, make lots and lots of character  json file!!! Refer to characters/default.json for example
+- Character Kisna originally made by Bronya Rand
 
 
 ## Instructions:
@@ -38,10 +39,11 @@ To run this bot:
 
 1. Load the LLM model of your choice in Koboldcpp (Make sure it's marked as not safe for audience)
 2. Download this repository ~~[OpenKlyde](https://github.com/badgids/OpenKlyde)~~ [DiscordBot](https://github.com/Ambruk-chan/DiscordBot)
-3. Open bot.py and at replace API_KEY with your bot's API key
+3. Make a .env file as written in example.env
 4. Install the requirements. I suggest using an Anaconda or Miniconda instance.
     ```pip install -r requirements.txt```
-5. Run the bot with `python bot.py`
+5. I might have messed up with the requirements.txt, but I think you also need to download and install tesseract.
+6. Run the bot with `python bot.py`
 
 Cheers!
 
@@ -59,9 +61,9 @@ Cheers!
 
 ## Known Issue:
 - Character Memory 
-  - There's no easy way to tweak what character remembers (obviously, the interface is Discord)
-  - Character has a separate memory for each user (So like, it's similar to a DM with a group of AI)
-  - Character can't see the content of the channel (I'm planning to add the 'AI Channel' feature where you can have a channel that is being logged by the bot and everything in the history of it is visible to the AI... If possible)
+  - There's no easy way to tweak what character remembers (FIXED)
+  - Character has a separate memory for each user (FIXED)
+  - Character can't see the content of the channel (FIXED)
 - Cannot Reply In Thread
   - Skill Issue on my part, will figure it out later
 - No Slash Command
@@ -71,7 +73,7 @@ Cheers!
   - Honestly this whole thing started as a joke, if you see the Read Me file, it's all just irony
   - I never expected it to work this well
 - System Prompt
-  - System Prompt is just awful, the instruction sent to the AI is still designed for RP and not Discord Chat
-  - Excessive use of Emoji, Kaomoji, and all that stuff
+  - System Prompt is just awful, the instruction sent to the AI is still designed for RP and not Discord Chat (FIXED)
+  - Excessive use of Emoji, Kaomoji, and all that stuff (FIXED)
 
 Yeah that's all the current issue.
