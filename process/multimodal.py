@@ -106,7 +106,7 @@ async def process_image(image_bytes):
         error_msg = f"An error occurred: {str(e)}"
         await util.write_to_log(error_msg)
 
-        return "Image and Text Recognition Error"
+        return "Image Text Recognition Error"
     return "Image and Text Recognition Error"
 
 
