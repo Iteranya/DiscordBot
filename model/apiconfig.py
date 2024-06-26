@@ -105,7 +105,7 @@ async def send_to_discord_queue() -> None:
             llmreply = await config.queue_to_send_message.get()
 
             default_character_url = "https://i.imgur.com/mxlcovm.png"
-            default_character_name = "Ambruk-GPT"
+            default_character_name = config.bot_display_name
 
             if "simple_message" in llmreply:
                 

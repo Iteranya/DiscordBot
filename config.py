@@ -18,6 +18,8 @@ tts_config = None
 tts_model = None
 gpt_cond_latent = None
 speaker_embedding = None
+bot_display_name = "Aktiva-AI"
+bot_default_avatar = "https://i.imgur.com/mxlcovm.png"
 
 text_api: dict = {}
 image_api: dict = {}
