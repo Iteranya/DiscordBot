@@ -14,6 +14,5 @@ async def get_channel_history(channel):
 
     # Reverse the order of the collected messages
     history.reverse()
-    contents = "\n".join(history)
-
+    contents = "\n\n".join(history)
     return contents

@@ -118,25 +118,32 @@ async def create_text_prompt(
     image_description,
     image_data
  ) -> str:
-    reply = await process_pseudonym(user,user_input)
     
+    reply = await process_pseudonym(user,user_input)
     name_variations = await generate_name_variations(history)
+    extracted_pseudonym = extract_pseudonym(user_input)
+    if extracted_pseudonym:
+        reply = await process_pseudonym(user,extracted_pseudonym)
+
     # The use JB is for a very niche use case, I will not recommend it.
     # If you make the character definition properly, this won't be a problem
-    jb = "[System Note: The following reply will be written in 4 paragraphs or less without additional metacommentary]\n"
+    jb = f"[System Note: The following reply will be written in a way that portrays {bot}'s character in RP format]\n"
     if not image_data:
         image_prompt = ""
     elif image_description:
-        image_prompt = "\n[System Note: Here's the Text Recognition Result from the Given Image:" + image_description + "]"
+        image_prompt = "\n[System Note: Here's the Text Recognition Result from the Given Image:" + image_description + "]\n"
     else:
         image_prompt = f"\n[System Note: {user} sent an image attachment]"
     
-    prompt = character + history + reply + image_prompt + "\n" + bot + ": "
+    prompt = character + history + image_prompt + "\n\n" + jb + bot + ": "
 
-    stopping_strings = ["\n" + user + ":","[System", "[SYSTEM", user + ":", bot +
+    stopping_strings = [ user + ":","[System","\n[System", "[SYSTEM", user + ":", bot +
                         ":", "You:", "<|endoftext|>", "<|eot_id|>", "\nuser"] + name_variations
     
     print(stopping_strings)
+    stopping_strings = set(stopping_strings)
+    stopping_strings = list(stopping_strings)
+    print(reply)
     data = text_api["parameters"]
     
     data.update({"prompt": prompt})
@@ -154,8 +161,10 @@ def add_colon_to_string(string):
 def process_names(names):
     processed_names = set()
     for name in names:
-        processed_names.add(add_colon_to_string(name))
-        processed_names.add(add_colon_to_string(name.lower()))
+        processed_names.add(f"{name.lower()}:")
+        #processed_names.add(add_colon_to_string(name.lower()))
+        processed_names.add(f"{name}:")
+
     return processed_names
 
 async def generate_name_variations(history):
@@ -172,17 +181,19 @@ async def generate_name_variations(history):
 
 # Call the function and store the result in a variable
 
-async def process_pseudonym(user,user_input):
+async def process_pseudonym(user,extracted_pseudonym):
     name_mapping = json_to_string_map()
-
+    result = ""
     # Check for specific keywords in the content to apply pseudonyms
     for key, pseudonym in name_mapping.items():
-        if user == key:
-            reply = f"{pseudonym}: {user_input}"
-            return reply
-    else:
-            reply = f"{user}: {user_input}"
-            return reply
+        if extracted_pseudonym[0] == key:
+            result = f"{pseudonym}: {extracted_pseudonym[1]}"
+            print("Pseudonym Found")
+            return result
+            
+    result = f"{user}: {extracted_pseudonym[1]}"
+    print("Pseudonym Not Found")
+    return result
 
 def json_to_string_map():
     json_file = "Pseudonym.json"
@@ -211,3 +222,19 @@ def get_keys_from_json():
             return string_list
      except FileNotFoundError:
          print("No Pseudonym.json found in the root")
+
+def extract_pseudonym(input_string):
+
+    # Define the regex pattern to match "user" and "Says something"
+    pattern = r"^(\w+):\s(.+)$"
+
+    # Use re.match to find the pattern in the string
+    match = re.match(pattern, input_string)
+
+    if match:
+        user = match.group(1)  # This will be "user"
+        message = match.group(2)  # This will be "Says something"
+        return [user,message]
+    else:
+        return None
+        
