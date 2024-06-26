@@ -15,12 +15,6 @@ If you want to be cultured, you'll also need to download one of these bad boys~
 - [Anjir](https://huggingface.co/Hastagaras/Anjir-8B-L3?not-for-all-audiences=true)
 - [Nyanade](https://huggingface.co/Lewdiculous/Nyanade_Stunna-Maid-7B-v0.2-GGUF-IQ-Imatrix)
 
-----NEW----:
-
-~~XTTS support added thanks to [Elbios](https://github.com/Elbios)'s hard work and changes in their fork!~~
-
-Nonsense! I don't need XTTS to speak with all of you! 
-Unless... You want me to make an ASMR? Muehehe~
 
 ### Stable Diffusion
 ~~- bot supports stable diffusion but I recommend using SDXL as the bot will send a prompt to SD in natural language and previous SD (like SD1.5) would struggle~~
@@ -33,11 +27,9 @@ Cuz I got GBNF, take that corpo garbage!!!
 - The bot supports koboldcpp API ~~but also OpenAI-compatible backends. Look in configurations folder for examples. Put your API key in the~~ ~~'Bearer' line~~ ClosedAI, Anthropic, and Google can \[REDACTED\] MY \[DATA EXPUNGED\] and \[CENSORED\] you hear me?! \[EXPLICITIVES REMOVED\]YA'LL!!!
 
 ### Additional configuration needed to run the bot
-- Discord API key in bot.py in the global variable
-~~- If using openai/mistral - API key in Bearer line in configuration/text-default.json~~
+- Discord API key in .env in the global variable
 - fill in characters/default.json with your character prompt
 - Or just, yknow, make lots and lots of character  json file!!! Refer to characters/default.json for example
-- optionally in functions.py in function get_character() you can fill out the 'examples' array with examples of dialogue you want the bot to follow
 
 
 ## Instructions:
@@ -50,7 +42,6 @@ To run this bot:
 4. Install the requirements. I suggest using an Anaconda or Miniconda instance.
     ```pip install -r requirements.txt```
 5. Run the bot with `python bot.py`
-   ~~- optionally with --tts_xtts flag~~
 
 Cheers!
 
