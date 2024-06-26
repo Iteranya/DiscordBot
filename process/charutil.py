@@ -3,8 +3,9 @@
 # This is the function that supports the Observer
 import os
 import json
-import typing
+from typing import Any
 
+from types.character import Character
 
 # For xtts2 TTS (now imported conditionally at the bottom of the script)
 # import torch
@@ -12,13 +13,12 @@ import typing
 # from TTS.tts.configs.xtts_config import XttsConfig
 # from TTS.tts.models.xtts import Xtts
 
-
 async def determineType():
     return 
 
 # IT'S THIS PART!!!
 
-async def get_card(bot_name:str):
+async def get_card(bot_name: str) -> Character | None:
     directory = "./characters"
     for filename in os.listdir(directory):
         if filename.endswith(".json"):
@@ -26,11 +26,11 @@ async def get_card(bot_name:str):
             try:
                 # Open and load JSON file
                 with open(filepath, 'r', encoding='utf-8') as file:
-                    data: dict[str, any] = json.load(file)
+                    data = json.load(file)
                     print(data['name'] + str(bot_name).lower())
-                
+
                 # Check if 'name' field matches target_name
-                if 'name' in data and str(data['name']).lower() == str(bot_name).lower():
+                if "name" in data and str(data["name"]).lower() == str(bot_name).lower():
                     print("success")
                     return data
             except json.JSONDecodeError:
@@ -38,17 +38,13 @@ async def get_card(bot_name:str):
             except Exception as e:
                 print(f"Error processing file {filepath}: {e}")
 
-    
-
-async def get_character_prompt(json_card:dict):
-    if(json_card is None):
+async def get_character_prompt(json_card: dict[str, Any] | None) -> str | None:
+    if(json_card is None):  # FIXME: Mr Paradox seems to be having a skill issue moment here, kek
         print("IS NOT A VALID JSON IN LINE 46... WHY!?!?!?")
         return None
     else:
         # Your name is <name>.
-        character:str 
-        
-        character = "You are " + json_card["name"] + ", you embody their character, persona, goals, personality, and bias which is described in detail below:"
+        character: str = "You are " + json_card["name"] + ", you embody their character, persona, goals, personality, and bias which is described in detail below:"
 
         # Your name is <name>. You are a <persona>.
         character = character + "Your persona: " + json_card["persona"] + ". "
@@ -66,4 +62,3 @@ async def get_character_prompt(json_card:dict):
         "\n" + '\n'.join(examples) + "\n"
 
         return character_prompt
-

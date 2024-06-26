@@ -11,27 +11,31 @@ import process.multimodal as multimodal
 import config
 import discord
 import util
-from process import history
-from observer import function
 import json
+from observer import function
+from process import history
+from typing import Any
 # This part decides what to do with the incoming message
 # Also LAM stuff~(coming soon)
 
-async def think(message:discord.Message, bot:str, reply:str):
+async def think(message: discord.Message, bot: str, reply: str) -> None:
     await message.add_reaction('✨')
     json_card = await charutil.get_card(bot)
 
+    if json_card is None:
+        return
+
     # If user wants action
     if str(message.content).startswith("Instruction:"):
-        await action(message,json_card,reply)
-
+        await action(message, json_card, reply)
     # If user wants convo
     else:
-        await convo(message,json_card, reply)
+        await convo(message, json_card, reply)
+
     return
 
 # TODO Add the Multimodal Thingy so you can send your waifu MEEEEMMMSSSSS!!!!
-async def convo(message:discord.Message,json_card:dict[str,any],reply:str):
+async def convo(message: discord.Message, json_card: dict[str, Any], reply: str) -> None:
     user:str = message.author.display_name
     user = user.replace(" ", "")
 
@@ -72,23 +76,37 @@ async def convo(message:discord.Message,json_card:dict[str,any],reply:str):
         print(config.text_api)
     return
 
-async def action(message,client,bot):
+# async def action(message: discord.Message, client: discord.Client, bot: str):
+async def action(message: discord.Message, json_card: dict[str, Any], reply: str):
     # WIP
     return
 
-async def instagram_picuki_extras(message:discord.message,reply):
+async def instagram_picuki_extras(message: discord.Message, reply) -> None:
     text = message
     text.content = text.content.replace('instagram.com', 'picuki.me')
 
     queue_item = {
         "simple_message": text, 
-        }
+    }
 
     config.queue_to_send_message.put_nowait(queue_item)
     return
 
 # TODO: Put the function below somewhere else
-async def create_text_prompt(user_input, user, character, bot, history, reply, text_api, image_description=None):
+async def create_text_prompt(
+    user_input: str,
+    user: str,
+    character: str,
+    bot: str,
+    history: str,
+    reply: str,
+    text_api: dict[str, Any],
+    image_description: str | None = None
+) -> str:
+
+    botlist: list[str] = []
+    replied: list[str] = []
+    eot: list[str] = []
 
     if image_description:
         image_prompt = "[System Note: The following is attached:" + image_description + "]"
@@ -104,6 +122,7 @@ async def create_text_prompt(user_input, user, character, bot, history, reply, t
         jb = "[System Note: The following reply will be written in 4 paragraphs or less without additional metacommentary]\n"
         prompt = character + history + reply + user + \
             ": " + user_input + "\n" + bot + ": "
+
     stopping_strings = ["\n" + user + ":","[System", user + ":", bot +
                         ":", "You:", "<|endoftext|>", "<|eot_id|>", "\nuser"] + eot + replied + botlist
     
@@ -126,7 +145,7 @@ async def create_text_prompt(user_input, user, character, bot, history, reply, t
     data_string = json.dumps(data)
     return data_string
 
-def add_colon_to_strings(string_list):
+def add_colon_to_strings(string_list: list[str]) -> list[str]:
     # Create a new list to store modified strings
     modified_list = []
     

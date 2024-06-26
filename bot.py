@@ -17,8 +17,11 @@ from observer import observer
 from model import apiconfig
 from interface import main
 from process import history
+
 load_dotenv()
-discord_token:str = os.getenv("DISCORD_TOKEN")
+discord_token: str | None = os.getenv("DISCORD_TOKEN")
+if discord_token is None:
+    raise RuntimeError("$DISCORD_TOKEN env variable is not set!")
 
 client = config.client
 

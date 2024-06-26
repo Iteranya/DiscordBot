@@ -13,24 +13,34 @@ import json
 # from TTS.tts.models.xtts import Xtts
 
 
-async def get_reply(message:discord.Message, client:discord.Client):
+async def get_reply(message: discord.Message, client: discord.Client):
     reply = ""
 
     # If the message reference is not none, meaning someone is replying to a message
     if message.reference is not None:
         # Grab the message that's being replied to
-        referenced_message = await message.channel.fetch_message(message.reference.message_id)
+        referenced_message = message.reference.cached_message
+        if referenced_message is None:
+            if message.reference.message_id is None:
+                print("Message ID is null")
+                return reply
+            referenced_message = await message.channel.fetch_message(message.reference.message_id)
 
         # Verify that the author of the message is bot and that it has a reply
         if referenced_message.reference is not None and referenced_message.author == client.user:
             # Grab that other reply as well
-            try:
-                referenced_user_message = await message.channel.fetch_message(referenced_message.reference.message_id)
-                # Process the fetched message as needed
-            except discord.NotFound:
-                # Handle the case where the message cannot be found
-                print("Message not found or access denied.")
-                return reply
+            referenced_user_message = referenced_message.reference.cached_message
+            if referenced_user_message is None:
+                if referenced_message.reference.message_id is None:
+                    print("Message ID is null")
+                    return reply
+                try:
+                    referenced_user_message = await message.channel.fetch_message(referenced_message.reference.message_id)
+                    # Process the fetched message as needed
+                except discord.NotFound:
+                    # Handle the case where the message cannot be found
+                    print("Message not found or access denied.")
+                    return reply
 
             # If the author of the reply is not the same person as the initial user, we need this data
             if referenced_user_message.author != message.author:
@@ -52,7 +62,7 @@ async def get_reply(message:discord.Message, client:discord.Client):
     return reply
 
 
-def get_user_list(history):
+def get_user_list(history: str) -> list[str]:
     # Define the regex pattern
     pattern = r'(?<=\n)[\w-]+(?=:)'
     
@@ -65,7 +75,7 @@ def get_user_list(history):
     # Convert the set back to a sorted list (if sorting is needed)
     return sorted(list(unique_usernames))
 
-def get_replied_user(reply):
+def get_replied_user(reply: str) -> list[str]:
     pattern = r'[\w-]+(?=:)'
     matches = re.findall(pattern, reply, flags=re.MULTILINE)
     
@@ -74,7 +84,7 @@ def get_replied_user(reply):
     # Convert the set back to a sorted list (if sorting is needed)
     return sorted(list(unique_usernames))
 
-async def get_bot_list():
+async def get_bot_list() -> list[str]:
     names = []
     folder_path = "./characters"
     # Iterate over each file in the directory
@@ -93,7 +103,4 @@ async def get_bot_list():
                 except json.JSONDecodeError as e:
                     print(f"Error parsing {filename}: {e}")
 
-
     return names
-
-

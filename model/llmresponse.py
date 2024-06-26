@@ -1,5 +1,6 @@
 import re
 import util
+from typing import Any
 
 # For xtts2 TTS (now imported conditionally at the bottom of the script)
 # import torch
@@ -10,8 +11,7 @@ import util
 
 import config
 
-async def handle_llm_response(content, response):
-
+async def handle_llm_response(content: str, response: dict[str, Any]) -> None:
     llm_response = response
     print(response)
 
@@ -39,7 +39,7 @@ async def handle_llm_response(content, response):
 
     config.queue_to_send_message.put_nowait(queue_item)
 
-def remove_last_word_before_final_colon(text):
+def remove_last_word_before_final_colon(text: str) -> str:
     # Define the regex pattern to find the last word before the final colon
     pattern = r'\b\w+\s*:$'
     
@@ -48,8 +48,7 @@ def remove_last_word_before_final_colon(text):
     
     return result.strip()  # Remove any leading or trailing whitespace
 
-
-def remove_string_before_final(data):
+def remove_string_before_final(data: str) -> str:
     # Check if the data ends with the trim string
     trim = "[System"
     if data.endswith(trim):

@@ -85,7 +85,7 @@ import re
 
 
 # Test getting message history
-async def get_channel_history(channel: discord.TextChannel):
+async def get_channel_history(channel: discord.abc.MessageableChannel):
     history = []
     async for message in channel.history(limit=10):
         name = str(message.author.display_name)
