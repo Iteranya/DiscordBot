@@ -13,7 +13,10 @@ import discord
 import util
 from io import BytesIO
 import io
+from io import BytesIO
+import io
 import json
+from PIL import Image
 from PIL import Image
 from observer import function
 from process import history
@@ -55,6 +58,17 @@ async def convo(message: discord.Message, json_card: dict[str, Any], reply: str)
         image_data = base64_image
     else:
         image_data=None
+    if message.attachments:
+        attachment = message.attachments[0]
+        image_bytes = await attachment.read()
+        #Toggle this to use just combine everything
+        image = Image.open(BytesIO(image_bytes))
+        if attachment.filename.lower().endswith('.webp'):
+            image_bytes = await util.convert_webp_bytes_to_png(image_bytes)
+        base64_image = util.encode_image_to_base64(image_bytes)
+        image_data = base64_image
+    else:
+        image_data=None
     # Clean the user's message to make it easy to read
     user_input = util.clean_user_message(message.clean_content)
     character_prompt = await charutil.get_character_prompt(json_card)
@@ -68,6 +82,7 @@ async def convo(message: discord.Message, json_card: dict[str, Any], reply: str)
         isinstance(config.text_api, dict)):
 
 
+        prompt = await create_text_prompt(user_input, user, character_prompt, json_card['name'], context, reply, config.text_api, image_description, image_data)
         prompt = await create_text_prompt(user_input, user, character_prompt, json_card['name'], context, reply, config.text_api, image_description, image_data)
         
         queue_item = {
@@ -117,6 +132,8 @@ async def create_text_prompt(
     text_api: dict[str, Any],
     image_description,
     image_data
+    image_description,
+    image_data
 ) -> str:
 
     botlist: list[str] = []
@@ -152,7 +169,13 @@ async def create_text_prompt(
     data.update({"stop_sequence": stopping_strings})
     if image_data:
         data.update({"images":[image_data]})
+    
+    data.update({"prompt": prompt})
+    data.update({"stop_sequence": stopping_strings})
+    if image_data:
+        data.update({"images":[image_data]})
     data_string = json.dumps(data)
+    data.update({"images": []})
     data.update({"images": []})
     return data_string
 
