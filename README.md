@@ -1,8 +1,6 @@
-# ~~OpenKlyde~~ Ambruk-chan - A Self Hosted AI Discord Bot
+Aktiva AI - A Self Hosted AI Discord Bot
 
 Big thank you to @badgids for making this possible, hehe~
-
-No, no, nothing weird with this fork. Just a little bit of improvement here and there. A little bit of this, a little bit of that, nothing weird at all~ 
 
 ## Prerequisites
 
@@ -11,9 +9,9 @@ Download Koboldcpp here:
 
 If you want to be cultured, you'll also need to download one of these bad boys~
 
-- [Stheno](https://huggingface.co/Lewdiculous/L3-8B-Stheno-v3.1-GGUF-IQ-Imatrix) 
-- [Anjir](https://huggingface.co/Hastagaras/Anjir-8B-L3?not-for-all-audiences=true)
-- [Nyanade](https://huggingface.co/Lewdiculous/Nyanade_Stunna-Maid-7B-v0.2-GGUF-IQ-Imatrix)
+- [Stheno - One of the best Llama 8B Model](https://huggingface.co/Lewdiculous/L3-8B-Stheno-v3.1-GGUF-IQ-Imatrix) 
+- [Anjir - Top Performer in Chaiverse Leaderboard](https://huggingface.co/Hastagaras/Anjir-8B-L3?not-for-all-audiences=true)
+- [Nyanade - One of the best Llama 7B Model](https://huggingface.co/Lewdiculous/Nyanade_Stunna-Maid-7B-v0.2-GGUF-IQ-Imatrix)
 
 
 ### Stable Diffusion
@@ -28,8 +26,8 @@ Cuz I got GBNF, take that corpo garbage!!!
 - ~~but also OpenAI-compatible backends. Look in configurations folder for examples. Put your API key in the~~ ~~'Bearer' line~~ Ahaha! No, never.
 ### Additional configuration needed to run the bot
 - Discord API key in .env in the global variable
-- fill in characters/default.json with your character prompt
-- Or just, yknow, make lots and lots of character  json file!!! Refer to characters/default.json for example
+- make new character json files in the characters folder
+- Or just, yknow, make lots and lots of character json file!!! Refer to characters/default.json for example
 - Character Kisna originally made by Bronya Rand
 
 
@@ -55,9 +53,8 @@ Cheers!
 - [x] Refactor this whole entire mess...
 - [x] Redo the character trigger and swapping system with webhook.
 - [ ] Implement GBNF for literal fucking Large Action Model feature.
-- [ ] Add more standard Discord Bot features. (music, games, moderation, etc.)
 - [ ] Enable support for ~~Character.ai~~, TavernAI, SillyTavern, etc. character formats. (currently not practical)
-- [ ] Make User Friendly UI to set shit up.
+- [ ] Make User Friendly UI to set things up.
 
 ## Known Issue:
 - Character Memory 
