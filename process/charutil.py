@@ -5,8 +5,6 @@ import os
 import json
 from typing import Any
 
-from types.character import Character
-
 # For xtts2 TTS (now imported conditionally at the bottom of the script)
 # import torch
 # import torchaudio
@@ -18,7 +16,7 @@ async def determineType():
 
 # IT'S THIS PART!!!
 
-async def get_card(bot_name: str) -> Character | None:
+async def get_card(bot_name: str):
     directory = "./characters"
     for filename in os.listdir(directory):
         if filename.endswith(".json"):

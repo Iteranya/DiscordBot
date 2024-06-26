@@ -13,7 +13,6 @@ import config
 
 async def handle_llm_response(content: str, response: dict[str, Any]) -> None:
     llm_response = response
-    print(response)
 
     try:
         data = llm_response['results'][0]['text']

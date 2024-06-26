@@ -123,7 +123,7 @@ async def create_text_prompt(
         prompt = character + history + reply + user + \
             ": " + user_input + "\n" + bot + ": "
 
-    stopping_strings = ["\n" + user + ":","[System", user + ":", bot +
+    stopping_strings = ["\n" + user + ":","[System", "[SYSTEM", user + ":", bot +
                         ":", "You:", "<|endoftext|>", "<|eot_id|>", "\nuser"] + eot + replied + botlist
     
     print(stopping_strings)
@@ -141,6 +141,7 @@ async def create_text_prompt(
     else:
         data.update({"prompt": prompt})
         data.update({"stop_sequence": stopping_strings})
+        data.update({"images": []})
 
     data_string = json.dumps(data)
     return data_string
