@@ -34,6 +34,8 @@ Now, this is an interview-like format.
 
 For each string in the examples string, you want to make a character quote followed immediately with a metacommentary of the character. Yes, actual metacommmentary, I know you don't want this, but trust me, it won't show up or even be generated. Just keep the format.
 
+**Important** also add the [System Note: RP Continues awaiting user input...] or something similar for the last system note example, just trust me alright? There's no easy way to explain why this is important.
+
 So the format is:
 ```
 user: Brief Introduction?
@@ -62,7 +64,7 @@ Here's what the example looks like:
 "[System Note: RP Continues, awaiting user input...]"
 ```
 
-It is imperative that you started all of these metacommentary with [System Note...
+**It is imperative that you started all of these metacommentary with [System Note...**
 
 If you don't do that, you will have metacommentary all over your chat. 
 
