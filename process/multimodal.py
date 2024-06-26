@@ -49,65 +49,18 @@ async def read_image(message):
         print(f"An error occurred: {e}")
 
 async def process_image(image_bytes):
-    try:
-            
-            image = Image.open(BytesIO(image_bytes))
-
-            # OCR~
-            recognized_text = pytesseract.image_to_string(image).strip()
-            base64_image = util.encode_image_to_base64(image_bytes)
-            image_recognition_result = "Image Recognition Failed"
-            # Process each attachment (actually just one for now)
-            # Check if it is an image based on content type
-            
-            #Toggle Only Text Recognition
-            return recognized_text
-
-            if not recognized_text:
-                recognized_text = "No text recognized in the image."
-
-            # Define the POST data
-            try:
-                post_data = await create_image_prompt(base64_image)
-
-                # Specify the URL
-                timeout = ClientTimeout(total=600)
-                connector = TCPConnector(limit_per_host=10)
-                async with ClientSession(timeout=timeout, connector=connector) as session:
-                    try:
-                        async with session.post(config.text_api["address"] + config.text_api["generation"], headers=config.text_api["headers"], data=post_data) as response:
-                            if response.status == 200:
-                                try:
-                                    json_response = await response.json()
-                                    print(json_response)
-                                    image_recognition_result = json_response['results'][0]['text']
-                                    image_recognition_result = remove_string_before_final(image_recognition_result)
-                                    combined_description = f"Image Recognition Result: {image_recognition_result} | Text Within The Image: {recognized_text}"
-                                    return combined_description
-                                except json.decoder.JSONDecodeError as e:
-                                    # Handle the case where response is not JSON-formatted
-                                    print(f"Failed to decode JSON response: {e}")
-                                    text_response = await response.text()
-                                    print(f"Response text was: {text_response}")
-                            else:
-                                # Handle non-200 responses here
-                                print(f"HTTP request failed with status: {response.status}")
-                    except Exception as e:
-                        # Handle any other exceptions
-                        print(e)
-            except Exception as e:
-                print(e)
-                combined_description = f"Image Recognition Result: Fail | Text Within The Image: {recognized_text}"
-                return combined_description 
-
-
+    try:        
+        image = Image.open(BytesIO(image_bytes))
+        # OCR~
+        recognized_text = pytesseract.image_to_string(image).strip()
+        #Toggle Only Text Recognition
+        return recognized_text 
     except Exception as e:
         # Handle any other exception that was not explicitly caught
         error_msg = f"An error occurred: {str(e)}"
         await util.write_to_log(error_msg)
 
         return "Image Text Recognition Error"
-    return "Image and Text Recognition Error"
 
 
 async def create_image_prompt(

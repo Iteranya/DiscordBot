@@ -120,7 +120,10 @@ async def send_to_discord_queue() -> None:
                 if not llmreply["content"]["channel"]:
 
                     # Update reactions
-                    await llmreply["content"]["message"].add_reaction('✅')
+                    try:
+                        await llmreply["content"]["message"].add_reaction('✅')
+                    except Exception as e:
+                        print("Hi!")
 
                 # Split the response into chunks of 1500 characters
                 response = llmreply["response"]

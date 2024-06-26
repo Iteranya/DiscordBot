@@ -4,3 +4,4 @@
 venv
 log.txt
 *.py[cod]
+Pseudonym.json

@@ -1,3 +1,5 @@
+import os
+import re
 import process.charutil as charutil
 import process.multimodal as multimodal
 
@@ -16,7 +18,10 @@ from typing import Any
 # Also LAM stuff~(coming soon)
 
 async def think(message: discord.Message, bot: str, reply: str) -> None:
-    await message.add_reaction('✨')
+    try:
+        await message.add_reaction('✨')
+    except Exception as e:
+        print(e)
     json_card = await charutil.get_card(bot)
 
     if json_card is None:
@@ -113,7 +118,8 @@ async def create_text_prompt(
     image_description,
     image_data
  ) -> str:
-
+    reply = await process_pseudonym(user,user_input)
+    
     name_variations = await generate_name_variations(history)
     # The use JB is for a very niche use case, I will not recommend it.
     # If you make the character definition properly, this won't be a problem
@@ -125,8 +131,7 @@ async def create_text_prompt(
     else:
         image_prompt = f"\n[System Note: {user} sent an image attachment]"
     
-    prompt = character + history + reply + user + \
-        ": " + user_input + image_prompt + "\n" + bot + ": "
+    prompt = character + history + reply + image_prompt + "\n" + bot + ": "
 
     stopping_strings = ["\n" + user + ":","[System", "[SYSTEM", user + ":", bot +
                         ":", "You:", "<|endoftext|>", "<|eot_id|>", "\nuser"] + name_variations
@@ -156,11 +161,53 @@ def process_names(names):
 async def generate_name_variations(history):
     user_list = function.get_user_list(history)
     bot_list = await function.get_bot_list()
-
-    combined_list = set(user_list + bot_list)
+    pseudonym_list = get_keys_from_json()
+    if(pseudonym_list):
+        combined_list = set(user_list + bot_list + pseudonym_list)
+    else:
+        combined_list = set(user_list + bot_list)
     name_variations = process_names(combined_list)
 
     return list(name_variations)
 
 # Call the function and store the result in a variable
 
+async def process_pseudonym(user,user_input):
+    name_mapping = json_to_string_map()
+
+    # Check for specific keywords in the content to apply pseudonyms
+    for key, pseudonym in name_mapping.items():
+        if user == key:
+            reply = f"{pseudonym}: {user_input}"
+            return reply
+    else:
+            reply = f"{user}: {user_input}"
+            return reply
+
+def json_to_string_map():
+    json_file = "Pseudonym.json"
+    try:
+        root_path = os.path.dirname(os.path.abspath(__file__))  # Get the absolute path of the current script
+        json_path = "Pseudonym.json"  # Construct the full path to the JSON file
+        with open(json_path, 'r') as file:
+            data = json.load(file)
+            return data
+    except FileNotFoundError:
+        print(f"Error: The file at {json_path} was not found.")
+        return {}
+    except json.JSONDecodeError:
+        print(f"Error: The file at {json_path} is not a valid JSON.")
+        return {}
+    except Exception as e:
+        print(f"An unexpected error occurred: {e}")
+        return {}
+    
+def get_keys_from_json():
+     try:
+        json_path = "Pseudonym.json"  # Construct the full path to the JSON file
+        with open(json_path, 'r') as file:
+            data = json.load(file)
+            string_list = [f"{value}" for value in data.values()]
+            return string_list
+     except FileNotFoundError:
+         print("No Pseudonym.json found in the root")

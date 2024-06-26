@@ -34,13 +34,15 @@ class EditMessageModal(discord.ui.Modal, title='Edit Message'):
         self.add_item(self.new_content)
 
     async def on_submit(self, interaction: discord.Interaction):
-        await edit(self.original_message, self.new_content.value)
-        await interaction.response.send_message("Message edited successfully!", ephemeral=True)
+        try:
+            await edit(self.original_message, self.new_content.value)
+            await interaction.response.send_message("Message edited successfully!", ephemeral=True)
+        except Exception:
+            await interaction.response.send_message("This ain't my AI~", ephemeral=True)
 
-
-    async def on_submit(self, interaction: discord.Interaction):
-        await edit(self.original_message, self.new_content.value)
-        await interaction.response.send_message("Message edited successfully!", ephemeral=True)
+    # async def on_submit(self, interaction: discord.Interaction):
+    #     await edit(self.original_message, self.new_content.value)
+    #     await interaction.response.send_message("Message edited successfully!", ephemeral=True)
 
 
 

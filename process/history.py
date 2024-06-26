@@ -3,7 +3,7 @@ import re
 # Test getting message history
 async def get_channel_history(channel):
     history = []
-    async for message in channel.history(limit=10):
+    async for message in channel.history(limit=20):
         name = str(message.author.display_name)
 
         # Sanitize the name by removing spaces, special characters, and converting to lowercase
