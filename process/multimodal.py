@@ -59,6 +59,9 @@ async def process_image(image_bytes):
             image_recognition_result = "Image Recognition Failed"
             # Process each attachment (actually just one for now)
             # Check if it is an image based on content type
+            
+            #Toggle Only Text Recognition
+            return recognized_text
 
             if not recognized_text:
                 recognized_text = "No text recognized in the image."
