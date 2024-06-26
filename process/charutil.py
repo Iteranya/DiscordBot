@@ -5,6 +5,7 @@ import os
 import json
 from typing import Any
 
+from types.character import Character
 
 # For xtts2 TTS (now imported conditionally at the bottom of the script)
 # import torch
@@ -12,13 +13,12 @@ from typing import Any
 # from TTS.tts.configs.xtts_config import XttsConfig
 # from TTS.tts.models.xtts import Xtts
 
-
 async def determineType():
     return 
 
 # IT'S THIS PART!!!
 
-async def get_card(bot_name: str) -> dict[str, Any] | None:
+async def get_card(bot_name: str) -> Character | None:
     directory = "./characters"
     for filename in os.listdir(directory):
         if filename.endswith(".json"):
@@ -26,11 +26,11 @@ async def get_card(bot_name: str) -> dict[str, Any] | None:
             try:
                 # Open and load JSON file
                 with open(filepath, 'r', encoding='utf-8') as file:
-                    data: dict[str, Any] = json.load(file)
+                    data = json.load(file)
                     print(data['name'] + str(bot_name).lower())
-                
+
                 # Check if 'name' field matches target_name
-                if 'name' in data and str(data['name']).lower() == str(bot_name).lower():
+                if "name" in data and str(data["name"]).lower() == str(bot_name).lower():
                     print("success")
                     return data
             except json.JSONDecodeError:

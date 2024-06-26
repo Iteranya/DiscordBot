@@ -8,9 +8,6 @@ global text_api
 global image_api
 global character_card
 global tts_config, tts_model, gpt_cond_latent, speaker_embedding
-discord_token: str | None = os.getenv("DISCORD_API_KEY")
-if discord_token is None:
-    raise RuntimeError("$DISCORD_API_KEY env variable is not set!")
 
 # Other configurations
 queue_to_process_message = asyncio.Queue()

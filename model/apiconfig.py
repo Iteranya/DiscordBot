@@ -11,12 +11,14 @@ from aiohttp import ClientSession
 from aiohttp import ClientTimeout
 from aiohttp import TCPConnector
 
+from typing import Any
+
 import config
 import util
 from model import llmresponse
 from process import history
 
-async def send_to_model_queue():
+async def send_to_model_queue() -> None:
 
     while True:
         # Get the queue item that's next in the list
@@ -51,18 +53,18 @@ async def send_to_model_queue():
                 config.queue_to_process_message.task_done()
             except Exception as e:
                 # Handle any other exceptions
-                await handle_error_response(content,e)
+                await handle_error_response(content, e)
 
-async def handle_error_response(content,e):
+async def handle_error_response(content: dict[str, Any], e: Exception) -> None:
     content["message"].content = "Bot's asleep, probably~ \nHere's the error code:" +str(e)
     queue_item={
-        "text_message":content
+        "text_message": content
     }
     config.queue_to_send_message.put_nowait(queue_item)
 
 
-async def send_to_stable_diffusion_queue():
-    global image_api
+async def send_to_stable_diffusion_queue() -> None:
+    global image_api  # FIXME: Unbound
 
     while True:
         image_prompt = await config.queue_to_process_image.get()
@@ -97,7 +99,7 @@ async def send_to_stable_diffusion_queue():
 
         config.queue_to_process_image.task_done()
 
-async def send_to_discord_queue():
+async def send_to_discord_queue() -> None:
         while True:
             # Grab the reply that will be sent
             llmreply = await config.queue_to_send_message.get()
@@ -153,7 +155,7 @@ async def send_to_discord_queue():
                 config.queue_to_send_message.task_done()
 
   # Function to send messages using a webhook
-async def send_webhook_message(channel, content, avatar_url, username):
+async def send_webhook_message(channel: discord.TextChannel, content: str, avatar_url: str, username: str) -> None:
     webhook_list = await channel.webhooks()
 
     for webhook in webhook_list:
@@ -165,24 +167,21 @@ async def send_webhook_message(channel, content, avatar_url, username):
     await webhook.send(content, username=username, avatar_url=avatar_url)
     #await webhook.delete()
 
-async def set_api(config_file):
-
+async def set_api(config_file: str) -> dict[str, Any]:
     # Go grab the configuration file for me
     file = util.get_file_name("configurations", config_file)
     contents = await util.get_json_file(file)
+    # If contents aren't none, clear the API and shove new data in
     api = {}
 
-    # If contents aren't none, clear the API and shove new data in
-    if contents != None:
+    if contents:
         api.update(contents)
 
     # Return the API
     return api
 
 # Check to see if the API is running (pick any API)
-
-
-async def api_status_check(link, headers):
+async def api_status_check(link: str, headers):
 
     try:
         response = requests.get(link, headers=headers)

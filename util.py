@@ -5,6 +5,7 @@ import os
 import re
 import base64
 from PIL import Image
+from typing import Any
 import io
 import datetime
 
@@ -57,7 +58,7 @@ def clean_username(username: str) -> str:
     cleaned_username = cleaned_username.rstrip('. ')
     return cleaned_username
 
-async def get_json_file(filename: str) -> str | None:
+async def get_json_file(filename: str) -> dict[str, Any] | None:
     # Try to go read the file!
     try:
         with open(filename, 'r') as file:
