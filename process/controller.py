@@ -13,8 +13,6 @@ import discord
 import util
 from io import BytesIO
 import io
-from io import BytesIO
-import io
 import json
 from PIL import Image
 from PIL import Image
@@ -58,17 +56,7 @@ async def convo(message: discord.Message, json_card: dict[str, Any], reply: str)
         image_data = base64_image
     else:
         image_data=None
-    if message.attachments:
-        attachment = message.attachments[0]
-        image_bytes = await attachment.read()
-        #Toggle this to use just combine everything
-        image = Image.open(BytesIO(image_bytes))
-        if attachment.filename.lower().endswith('.webp'):
-            image_bytes = await util.convert_webp_bytes_to_png(image_bytes)
-        base64_image = util.encode_image_to_base64(image_bytes)
-        image_data = base64_image
-    else:
-        image_data=None
+
     # Clean the user's message to make it easy to read
     user_input = util.clean_user_message(message.clean_content)
     character_prompt = await charutil.get_character_prompt(json_card)
@@ -82,7 +70,6 @@ async def convo(message: discord.Message, json_card: dict[str, Any], reply: str)
         isinstance(config.text_api, dict)):
 
 
-        prompt = await create_text_prompt(user_input, user, character_prompt, json_card['name'], context, reply, config.text_api, image_description, image_data)
         prompt = await create_text_prompt(user_input, user, character_prompt, json_card['name'], context, reply, config.text_api, image_description, image_data)
         
         queue_item = {
@@ -132,11 +119,8 @@ async def create_text_prompt(
     text_api: dict[str, Any],
     image_description,
     image_data
-    image_description,
-    image_data
-) -> str:
+ ) -> str:
 
-    botlist: list[str] = []
     replied: list[str] = []
     eot: list[str] = []
     eot = function.get_user_list(history)
@@ -147,17 +131,14 @@ async def create_text_prompt(
     replied = add_colon_to_strings(replied)
     jb = "[System Note: The following reply will be written in 4 paragraphs or less without additional metacommentary]\n"
     if not image_data:
-        image_prompt = "\n[System Note: No Image Was Sent]"
-        prompt = character + history + reply + user + \
-            ": " + user_input + image_prompt + "\n" + bot + ": "
+        image_prompt = ""
     elif image_description:
         image_prompt = "\n[System Note: Here's the Text Recognition Result from the Given Image:" + image_description + "]"
-        prompt = character + history + reply + user + \
-            ": " + user_input + image_prompt + "\n" + bot + ": "
     else:
         image_prompt = f"\n[System Note: {user} sent an image attachment]"
-        prompt = character + history + reply + user + \
-            ": " + user_input + "\n" + bot + ": "
+    
+    prompt = character + history + reply + user + \
+        ": " + user_input + image_prompt + "\n" + bot + ": "
 
     stopping_strings = ["\n" + user + ":","[System", "[SYSTEM", user + ":", bot +
                         ":", "You:", "<|endoftext|>", "<|eot_id|>", "\nuser"] + eot + replied + botlist
@@ -170,12 +151,7 @@ async def create_text_prompt(
     if image_data:
         data.update({"images":[image_data]})
     
-    data.update({"prompt": prompt})
-    data.update({"stop_sequence": stopping_strings})
-    if image_data:
-        data.update({"images":[image_data]})
     data_string = json.dumps(data)
-    data.update({"images": []})
     data.update({"images": []})
     return data_string
 
