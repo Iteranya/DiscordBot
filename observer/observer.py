@@ -1,4 +1,3 @@
-import datetime
 import re
 import process.controller as controller
 from observer import function
@@ -33,7 +32,7 @@ async def bot_behavior(message: discord.Message, client: discord.Client) -> bool
                 await bot_think(message, bot.lower(), reply)
                 return True
 
-        # Check if contains the word 'https://www.instagram.com'
+        # Check if contains the word 'https://www.instagram.com' For the silly function I tried to implement :v
         if re.search("https://www.instagram.com/p/", str(text)):
             await instagram_replace(message, reply)
             return True

@@ -1,10 +1,3 @@
-# For xtts2 TTS (now imported conditionally at the bottom of the script)
-# import torch
-# import torchaudio
-# from TTS.tts.configs.xtts_config import XttsConfig
-# from TTS.tts.models.xtts import Xtts
-
-
 import process.charutil as charutil
 import process.multimodal as multimodal
 
@@ -121,14 +114,7 @@ async def create_text_prompt(
     image_data
  ) -> str:
 
-    replied: list[str] = []
-    eot: list[str] = []
-    eot = function.get_user_list(history)
-    eot = add_colon_to_strings(eot)
-    botlist = await function.get_bot_list()
-    botlist = add_colon_to_strings(botlist)
-    replied = function.get_replied_user(reply)
-    replied = add_colon_to_strings(replied)
+    name_variations = await generate_name_variations(history)
     jb = "[System Note: The following reply will be written in 4 paragraphs or less without additional metacommentary]\n"
     if not image_data:
         image_prompt = ""
@@ -141,7 +127,7 @@ async def create_text_prompt(
         ": " + user_input + image_prompt + "\n" + bot + ": "
 
     stopping_strings = ["\n" + user + ":","[System", "[SYSTEM", user + ":", bot +
-                        ":", "You:", "<|endoftext|>", "<|eot_id|>", "\nuser"] + eot + replied + botlist
+                        ":", "You:", "<|endoftext|>", "<|eot_id|>", "\nuser"] + name_variations
     
     print(stopping_strings)
     data = text_api["parameters"]
@@ -165,3 +151,25 @@ def add_colon_to_strings(string_list: list[str]) -> list[str]:
         modified_list.append(string + ':')
     
     return modified_list
+
+def add_colon_to_string(string):
+    return string + ':'
+
+def process_names(names):
+    processed_names = set()
+    for name in names:
+        processed_names.add(add_colon_to_string(name))
+        processed_names.add(add_colon_to_string(name.lower()))
+    return processed_names
+
+async def generate_name_variations(history):
+    user_list = function.get_user_list(history)
+    bot_list = await function.get_bot_list()
+
+    combined_list = set(user_list + bot_list)
+    name_variations = process_names(combined_list)
+
+    return list(name_variations)
+
+# Call the function and store the result in a variable
+

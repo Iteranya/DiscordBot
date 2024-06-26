@@ -2,13 +2,6 @@ import re
 import util
 from typing import Any
 
-# For xtts2 TTS (now imported conditionally at the bottom of the script)
-# import torch
-# import torchaudio
-# from TTS.tts.configs.xtts_config import XttsConfig
-# from TTS.tts.models.xtts import Xtts
-
-
 import config
 
 async def handle_llm_response(content: str, response: dict[str, Any]) -> None:

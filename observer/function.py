@@ -6,13 +6,6 @@ import os
 import json
 
 
-# For xtts2 TTS (now imported conditionally at the bottom of the script)
-# import torch
-# import torchaudio
-# from TTS.tts.configs.xtts_config import XttsConfig
-# from TTS.tts.models.xtts import Xtts
-
-
 async def get_reply(message: discord.Message, client: discord.Client):
     reply = ""
 
