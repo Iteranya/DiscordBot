@@ -115,6 +115,8 @@ async def create_text_prompt(
  ) -> str:
 
     name_variations = await generate_name_variations(history)
+    # The use JB is for a very niche use case, I will not recommend it.
+    # If you make the character definition properly, this won't be a problem
     jb = "[System Note: The following reply will be written in 4 paragraphs or less without additional metacommentary]\n"
     if not image_data:
         image_prompt = ""
@@ -140,17 +142,6 @@ async def create_text_prompt(
     data_string = json.dumps(data)
     data.update({"images": []})
     return data_string
-
-def add_colon_to_strings(string_list: list[str]) -> list[str]:
-    # Create a new list to store modified strings
-    modified_list = []
-    
-    # Iterate through each string in the input list
-    for string in string_list:
-        # Append the string with a colon at the end to the modified list
-        modified_list.append(string + ':')
-    
-    return modified_list
 
 def add_colon_to_string(string):
     return string + ':'

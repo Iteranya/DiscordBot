@@ -24,6 +24,7 @@ Cuz I got GBNF, take that corpo garbage!!!
 ### Koboldcpp, OpenAI API, Mistral API
 - The bot supports koboldcpp API
 - ~~but also OpenAI-compatible backends. Look in configurations folder for examples. Put your API key in the~~ ~~'Bearer' line~~ Ahaha! No, never.
+
 ### Additional configuration needed to run the bot
 - Discord API key in .env in the global variable
 - make new character json files in the characters folder
@@ -43,7 +44,9 @@ To run this bot:
 5. I might have messed up with the requirements.txt, but I think you also need to download and install tesseract.
 6. Run the bot with `python bot.py`
 
-Cheers!
+## Character creation
+
+Refer to README.md file in the characters folder.
 
 ## ToDo (From Top Priority to the Least Important):
 
