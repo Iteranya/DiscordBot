@@ -35,7 +35,7 @@ Now, this is an interview-like format.
 For each string in the examples string, you want to make a character quote followed immediately with a metacommentary of the character. Yes, actual metacommmentary, I know you don't want this, but trust me, it won't show up or even be generated. Just keep the format.
 
 So the format is:
-
+```
 user: Brief Introduction?
 bot: Character's Self Introduction
 [System Note: Above is bot doing self-introduction in their own way. Be creative with this, don't worry]
@@ -48,7 +48,7 @@ bot: Any other answer
 user: Any other question
 bot: Any other answer
 [System Note: RP Continues awaiting user input...]
-
+```
 Here's what the example looks like:
 ```
 "user: Brief Introduction?",
