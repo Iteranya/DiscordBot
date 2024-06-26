@@ -119,7 +119,6 @@ async def create_text_prompt(
     image_data
  ) -> str:
     
-    reply = await process_pseudonym(user,user_input)
     name_variations = await generate_name_variations(history)
     extracted_pseudonym = extract_pseudonym(user_input)
     if extracted_pseudonym:
