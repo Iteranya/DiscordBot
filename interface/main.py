@@ -53,6 +53,8 @@ async def delete(message:discord.Message):
 
 async def character_info():
     character = get_bot()
+    result_str = "\n".join([f"{name}: {info}" for name, info in character.items()])
+    return result_str
 
 async def get_bot():
     folder_path = "./characters"
