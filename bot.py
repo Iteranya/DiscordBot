@@ -69,10 +69,6 @@ async def on_ready():
     tree.add_command(edit_message)
     tree.add_command(delete_message)
 
-    # I don't know how this work
-
-    # Initialize the Commands   
-
     await tree.sync(guild=None)  
     print(f'Discord Bot is up and running.')
 
