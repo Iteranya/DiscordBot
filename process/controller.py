@@ -26,22 +26,28 @@ async def think(message: discord.Message, bot: str, reply: str) -> None:
 
     if json_card is None:
         return
+    
+    if message.attachments:
+        image_description = await image_process(message)
+        await convo(message,json_card,reply, image_description)
+    else:
+        await convo(message, json_card, reply, None)
+        return
 
-    # If user wants action
-    # if str(message.content).startswith("Instruction:"):
-    #     await action(message, json_card, reply)
-    # # If user wants convo
-    # else:
-    await convo(message, json_card, reply)
+async def image_process(message):
+    image_description = await multimodal.read_image(message)
+    message.content = f"\n[System Note: User sent the following attachment: {image_description}]"
+    queue_item = {
+        "simple_message": message, 
+    }
 
-    return
+    config.queue_to_send_message.put_nowait(queue_item)
+    return image_description
 
 # TODO Add the Multimodal Thingy so you can send your waifu MEEEEMMMSSSSS!!!!
-async def convo(message: discord.Message, json_card: dict[str, Any], reply: str) -> None:
+async def convo(message: discord.Message, json_card: dict[str, Any], reply: str, image_description) -> None:
     user:str = message.author.display_name
     user = user.replace(" ", "")
-
-    image_description = await multimodal.read_image(message)
 
     if message.attachments:
         attachment = message.attachments[0]
@@ -122,32 +128,23 @@ async def create_text_prompt(
     image_description,
     image_data
  ) -> str:
-    # extracted_pseudonym = extract_pseudonym(user_input)
-    # if extracted_pseudonym:
-    #     name_variations = await generate_name_variations(history, True)
-    #     reply = await process_pseudonym(user,extracted_pseudonym)
-    # else:
-    #     name_variations = await generate_name_variations(history, False)
-
-    # The use JB is for a very niche use case, I will not recommend it.
-    # If you make the character definition properly, this won't be a problem
     jb = f"[System Note: The following reply will be written in a way that portrays {bot}'s character in RP format. In less than 4 paragraphs.]\n"
     if not image_data:
         image_prompt = ""
     elif image_description:
-        image_prompt = "\n[System Note: Here's the Text Recognition Result from the Given Image:" + image_description + "]\n"
+        image_prompt = f"\n[System Note: {user} sent the following attachement:" + image_description + "]\n"
     else:
         image_prompt = f"\n[System Note: {user} sent an image attachment]"
     
     prompt = character + history + image_prompt + "\n\n[Reply] " + bot + ": "
 
-    stopping_strings = ["[System", "[SYSTEM", user + ":", bot +
-                        ":", "You:", "[Reply", "[REPLY"] 
+    stopping_strings = ["[System", "[SYSTEM", "(System","(SYSTEM", user + ":", bot +
+                        ":", "[Reply", "[REPLY"] 
     
     print(stopping_strings)
     stopping_strings = set(stopping_strings)
     stopping_strings = list(stopping_strings)
-    print(reply)
+    print(image_prompt)
     data = text_api["parameters"]
     
     data.update({"prompt": prompt})

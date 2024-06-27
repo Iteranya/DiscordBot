@@ -17,8 +17,16 @@ from observer import observer
 from model import apiconfig
 from interface import main
 from process import history
-
+from unittest.mock import patch
+from transformers.dynamic_module_utils import get_imports
 from transformers import AutoProcessor, AutoModelForCausalLM 
+import warnings
+from huggingface_hub import file_download
+
+# Suppress the specific FutureWarning from huggingface_hub
+warnings.filterwarnings("ignore", category=FutureWarning, module="huggingface_hub.file_download")
+warnings.filterwarnings("ignore", category=UserWarning, module="torch.utils")
+
 
 load_dotenv()
 discord_token: str | None = os.getenv("DISCORD_TOKEN")
@@ -27,11 +35,20 @@ if discord_token is None:
 
 client = config.client
 
-# try:
-#     config.florence = AutoModelForCausalLM.from_pretrained("microsoft/Florence-2-base-ft", trust_remote_code=True)
-#     config.florence_processor = AutoProcessor.from_pretrained("microsoft/Florence-2-base-ft", trust_remote_code=True)
-# except:
-#     print("Florence Not Downloaded... Don't worry about it~")
+def fixed_get_imports(filename: str | os.PathLike) -> list[str]:
+    if not str(filename).endswith("modeling_florence2.py"):
+        return get_imports(filename)
+    imports = get_imports(filename)
+    if "flash_attn" in imports:
+        imports.remove("flash_attn")
+    return imports
+
+with patch("transformers.dynamic_module_utils.get_imports", fixed_get_imports):
+    config.florence = AutoModelForCausalLM.from_pretrained("microsoft/Florence-2-base-ft", 
+                                                           trust_remote_code=True, 
+                                                           attn_implementation='sdpa')
+    config.florence_processor = AutoProcessor.from_pretrained("microsoft/Florence-2-base-ft", 
+                                                              trust_remote_code=True)
 tree = app_commands.CommandTree(client)
 
 @client.event
