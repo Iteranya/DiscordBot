@@ -28,11 +28,11 @@ async def think(message: discord.Message, bot: str, reply: str) -> None:
         return
 
     # If user wants action
-    if str(message.content).startswith("Instruction:"):
-        await action(message, json_card, reply)
-    # If user wants convo
-    else:
-        await convo(message, json_card, reply)
+    # if str(message.content).startswith("Instruction:"):
+    #     await action(message, json_card, reply)
+    # # If user wants convo
+    # else:
+    await convo(message, json_card, reply)
 
     return
 
@@ -47,7 +47,6 @@ async def convo(message: discord.Message, json_card: dict[str, Any], reply: str)
         attachment = message.attachments[0]
         image_bytes = await attachment.read()
         #Toggle this to use just combine everything
-        image = Image.open(BytesIO(image_bytes))
         if attachment.filename.lower().endswith('.webp'):
             image_bytes = await util.convert_webp_bytes_to_png(image_bytes)
         base64_image = util.encode_image_to_base64(image_bytes)
@@ -68,7 +67,17 @@ async def convo(message: discord.Message, json_card: dict[str, Any], reply: str)
         isinstance(config.text_api, dict)):
 
 
-        prompt = await create_text_prompt(user_input, user, character_prompt, json_card['name'], context, reply, config.text_api, image_description, image_data)
+        prompt = await create_text_prompt(
+            user_input, 
+            user, 
+            character_prompt, 
+            json_card['name'], 
+            context, 
+            reply, 
+            config.text_api, 
+            image_description, 
+            image_data
+            )
         
         queue_item = {
             'prompt': prompt,
@@ -88,11 +97,6 @@ async def convo(message: discord.Message, json_card: dict[str, Any], reply: str)
         print(character_prompt)
         print(json_card)
         print(config.text_api)
-    return
-
-# async def action(message: discord.Message, client: discord.Client, bot: str):
-async def action(message: discord.Message, json_card: dict[str, Any], reply: str):
-    # WIP
     return
 
 async def instagram_picuki_extras(message: discord.Message, reply) -> None:
@@ -118,12 +122,12 @@ async def create_text_prompt(
     image_description,
     image_data
  ) -> str:
-    extracted_pseudonym = extract_pseudonym(user_input)
-    if extracted_pseudonym:
-        name_variations = await generate_name_variations(history, True)
-        reply = await process_pseudonym(user,extracted_pseudonym)
-    else:
-        name_variations = await generate_name_variations(history, False)
+    # extracted_pseudonym = extract_pseudonym(user_input)
+    # if extracted_pseudonym:
+    #     name_variations = await generate_name_variations(history, True)
+    #     reply = await process_pseudonym(user,extracted_pseudonym)
+    # else:
+    #     name_variations = await generate_name_variations(history, False)
 
     # The use JB is for a very niche use case, I will not recommend it.
     # If you make the character definition properly, this won't be a problem
@@ -155,86 +159,86 @@ async def create_text_prompt(
     data.update({"images": []})
     return data_string
 
-def add_colon_to_string(string):
-    return string + ':'
+# def add_colon_to_string(string):
+#     return string + ':'
 
-def process_names(names):
-    processed_names = set()
-    for name in names:
-        processed_names.add(f"{name.lower()}:")
-        #processed_names.add(add_colon_to_string(name.lower()))
-        processed_names.add(f"{name}:")
+# def process_names(names):
+#     processed_names = set()
+#     for name in names:
+#         processed_names.add(f"{name.lower()}:")
+#         #processed_names.add(add_colon_to_string(name.lower()))
+#         processed_names.add(f"{name}:")
 
-    return processed_names
+#     return processed_names
 
-async def generate_name_variations(history, pseudonym):
-    user_list = function.get_user_list(history)
-    bot_list = await function.get_bot_list()
-    if pseudonym:
-        pseudonym_list = get_keys_from_json()
-        if(pseudonym_list):
-            combined_list = set(user_list + bot_list + pseudonym_list)
-    combined_list = set(user_list)
-    name_variations = process_names(combined_list)
+# async def generate_name_variations(history, pseudonym):
+#     user_list = function.get_user_list(history)
+#     bot_list = await function.get_bot_list()
+#     if pseudonym:
+#         pseudonym_list = get_keys_from_json()
+#         if(pseudonym_list):
+#             combined_list = set(user_list + bot_list + pseudonym_list)
+#     combined_list = set(user_list)
+#     name_variations = process_names(combined_list)
 
-    return list(name_variations)
+#     return list(name_variations)
 
 # Call the function and store the result in a variable
 
-async def process_pseudonym(user,extracted_pseudonym):
-    name_mapping = json_to_string_map()
-    result = ""
-    # Check for specific keywords in the content to apply pseudonyms
-    for key, pseudonym in name_mapping.items():
-        if extracted_pseudonym[0] == key:
-            result = f"{pseudonym}: {extracted_pseudonym[1]}"
-            print("Pseudonym Found")
-            return result
+# async def process_pseudonym(user,extracted_pseudonym):
+#     name_mapping = json_to_string_map()
+#     result = ""
+#     # Check for specific keywords in the content to apply pseudonyms
+#     for key, pseudonym in name_mapping.items():
+#         if extracted_pseudonym[0] == key:
+#             result = f"{pseudonym}: {extracted_pseudonym[1]}"
+#             print("Pseudonym Found")
+#             return result
             
-    result = f"{user}: {extracted_pseudonym[1]}"
-    print("Pseudonym Not Found")
-    return result
+#     result = f"{user}: {extracted_pseudonym[1]}"
+#     print("Pseudonym Not Found")
+#     return result
 
-def json_to_string_map():
-    json_file = "Pseudonym.json"
-    try:
-        root_path = os.path.dirname(os.path.abspath(__file__))  # Get the absolute path of the current script
-        json_path = "Pseudonym.json"  # Construct the full path to the JSON file
-        with open(json_path, 'r') as file:
-            data = json.load(file)
-            return data
-    except FileNotFoundError:
-        print(f"Error: The file at {json_path} was not found.")
-        return {}
-    except json.JSONDecodeError:
-        print(f"Error: The file at {json_path} is not a valid JSON.")
-        return {}
-    except Exception as e:
-        print(f"An unexpected error occurred: {e}")
-        return {}
+# def json_to_string_map():
+#     json_file = "Pseudonym.json"
+#     try:
+#         root_path = os.path.dirname(os.path.abspath(__file__))  # Get the absolute path of the current script
+#         json_path = "Pseudonym.json"  # Construct the full path to the JSON file
+#         with open(json_path, 'r') as file:
+#             data = json.load(file)
+#             return data
+#     except FileNotFoundError:
+#         print(f"Error: The file at {json_path} was not found.")
+#         return {}
+#     except json.JSONDecodeError:
+#         print(f"Error: The file at {json_path} is not a valid JSON.")
+#         return {}
+#     except Exception as e:
+#         print(f"An unexpected error occurred: {e}")
+#         return {}
     
-def get_keys_from_json():
-     try:
-        json_path = "Pseudonym.json"  # Construct the full path to the JSON file
-        with open(json_path, 'r') as file:
-            data = json.load(file)
-            string_list = [f"{value}" for value in data.values()]
-            return string_list
-     except FileNotFoundError:
-         print("No Pseudonym.json found in the root")
+# def get_keys_from_json():
+#      try:
+#         json_path = "Pseudonym.json"  # Construct the full path to the JSON file
+#         with open(json_path, 'r') as file:
+#             data = json.load(file)
+#             string_list = [f"{value}" for value in data.values()]
+#             return string_list
+#      except FileNotFoundError:
+#          print("No Pseudonym.json found in the root")
 
-def extract_pseudonym(input_string):
+# def extract_pseudonym(input_string):
 
-    # Define the regex pattern to match "user" and "Says something"
-    pattern = r"^(\w+):\s(.+)$"
+#     # Define the regex pattern to match "user" and "Says something"
+#     pattern = r"^(\w+):\s(.+)$"
 
-    # Use re.match to find the pattern in the string
-    match = re.match(pattern, input_string)
+#     # Use re.match to find the pattern in the string
+#     match = re.match(pattern, input_string)
 
-    if match:
-        user = match.group(1)  # This will be "user"
-        message = match.group(2)  # This will be "Says something"
-        return [user,message]
-    else:
-        return None
+#     if match:
+#         user = match.group(1)  # This will be "user"
+#         message = match.group(2)  # This will be "Says something"
+#         return [user,message]
+#     else:
+#         return None
         
