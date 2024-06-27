@@ -41,13 +41,10 @@ def remove_last_word_before_final_colon(text: str) -> str:
     return result.strip()  # Remove any leading or trailing whitespace
 
 def remove_string_before_final(data: str) -> str:
-    # Check if the data ends with the trim string
-    trim1 = "[System"
-    trim2 = "[SYSTEM"
-    if data.endswith(trim1):
-        # If it does, remove the trim string from the end
-        return data[:-len(trim1)]
-    if data.endswith(trim2):
-        return data[:-len(trim2)]
-    # If not, return the original data
+    substrings = ["[System", "[SYSTEM", "[Reply]", "[REPLY]"]
+    
+    for substr in substrings:
+        if data.endswith(substr):
+            return data[:-len(substr)]
+    
     return data

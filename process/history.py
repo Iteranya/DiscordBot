@@ -10,7 +10,7 @@ async def get_channel_history(channel):
         sanitized_name = re.sub(r'[^\w]', '', name)
 
         content = re.sub(r'<@!?[0-9]+>', '', message.content)  # Remove user mentions
-        history.append(f"{sanitized_name}: {content.strip()}")
+        history.append(f"[Reply] {sanitized_name}: {content.strip()}")
 
     # Reverse the order of the collected messages
     history.reverse()

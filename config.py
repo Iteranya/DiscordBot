@@ -3,6 +3,7 @@ import discord
 from dotenv import load_dotenv
 import asyncio
 
+
 load_dotenv()
 global text_api
 global image_api
@@ -13,6 +14,9 @@ global tts_config, tts_model, gpt_cond_latent, speaker_embedding
 queue_to_process_message = asyncio.Queue()
 queue_to_process_image = asyncio.Queue()
 queue_to_send_message = asyncio.Queue()
+
+florence = None
+florence_processor = None
 
 tts_config = None
 tts_model = None

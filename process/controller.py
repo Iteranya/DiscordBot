@@ -118,15 +118,16 @@ async def create_text_prompt(
     image_description,
     image_data
  ) -> str:
-    
-    name_variations = await generate_name_variations(history)
     extracted_pseudonym = extract_pseudonym(user_input)
     if extracted_pseudonym:
+        name_variations = await generate_name_variations(history, True)
         reply = await process_pseudonym(user,extracted_pseudonym)
+    else:
+        name_variations = await generate_name_variations(history, False)
 
     # The use JB is for a very niche use case, I will not recommend it.
     # If you make the character definition properly, this won't be a problem
-    jb = f"[System Note: The following reply will be written in a way that portrays {bot}'s character in RP format]\n"
+    jb = f"[System Note: The following reply will be written in a way that portrays {bot}'s character in RP format. In less than 4 paragraphs.]\n"
     if not image_data:
         image_prompt = ""
     elif image_description:
@@ -134,10 +135,10 @@ async def create_text_prompt(
     else:
         image_prompt = f"\n[System Note: {user} sent an image attachment]"
     
-    prompt = character + history + image_prompt + "\n\n" + jb + bot + ": "
+    prompt = character + history + image_prompt + "\n\n[Reply] " + bot + ": "
 
-    stopping_strings = [ user + ":","[System","\n[System", "[SYSTEM", user + ":", bot +
-                        ":", "You:", "<|endoftext|>", "<|eot_id|>", "\nuser"] + name_variations
+    stopping_strings = ["[System", "[SYSTEM", user + ":", bot +
+                        ":", "You:", "[Reply", "[REPLY"] 
     
     print(stopping_strings)
     stopping_strings = set(stopping_strings)
@@ -166,14 +167,14 @@ def process_names(names):
 
     return processed_names
 
-async def generate_name_variations(history):
+async def generate_name_variations(history, pseudonym):
     user_list = function.get_user_list(history)
     bot_list = await function.get_bot_list()
-    pseudonym_list = get_keys_from_json()
-    if(pseudonym_list):
-        combined_list = set(user_list + bot_list + pseudonym_list)
-    else:
-        combined_list = set(user_list + bot_list)
+    if pseudonym:
+        pseudonym_list = get_keys_from_json()
+        if(pseudonym_list):
+            combined_list = set(user_list + bot_list + pseudonym_list)
+    combined_list = set(user_list)
     name_variations = process_names(combined_list)
 
     return list(name_variations)

@@ -18,6 +18,8 @@ from model import apiconfig
 from interface import main
 from process import history
 
+from transformers import AutoProcessor, AutoModelForCausalLM 
+
 load_dotenv()
 discord_token: str | None = os.getenv("DISCORD_TOKEN")
 if discord_token is None:
@@ -25,7 +27,11 @@ if discord_token is None:
 
 client = config.client
 
-
+# try:
+#     config.florence = AutoModelForCausalLM.from_pretrained("microsoft/Florence-2-base-ft", trust_remote_code=True)
+#     config.florence_processor = AutoProcessor.from_pretrained("microsoft/Florence-2-base-ft", trust_remote_code=True)
+# except:
+#     print("Florence Not Downloaded... Don't worry about it~")
 tree:app_commands.CommandTree = app_commands.CommandTree(client)
 
 
@@ -64,6 +70,30 @@ async def on_ready():
     # Initialize the Commands
     tree.add_command(edit_message)
     tree.add_command(delete_message)
+
+    async def hello_world(interaction: discord.Interaction):
+        await interaction.response.send_message("Hello World!")
+
+    hello_command = app_commands.Command(
+        name="hello",
+        description="Send a Hello World message",
+        callback=hello_world
+    )
+
+    tree.add_command(hello_command)
+
+    async def character_info(interaction: discord.Interaction):
+        characters = main.character_info()
+        await interaction.response.send_message("Hello World!")
+
+    hello_command = app_commands.Command(
+        name="character_info",
+        description="Show a list of available characters",
+        callback=character_info
+    )
+
+    tree.add_command(hello_command)
+
 
     await tree.sync()
     print(f'Discord Bot is up and running.')

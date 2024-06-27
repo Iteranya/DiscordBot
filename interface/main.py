@@ -1,20 +1,9 @@
-import asyncio
+import json
 import os
 import discord
-from discord import app_commands
-from discord import Intents
-from discord import Client
-import logging
-import argparse
 import config
-from process import charutil
+from observer import function
 
-import util
-
-from discord import app_commands
-from dotenv import load_dotenv
-from observer import observer
-from model import apiconfig
 
 client = config.client
 
@@ -61,5 +50,34 @@ async def edit(message:discord.Message, new_content):
 async def delete(message:discord.Message):
     webhook = await client.fetch_webhook(message.webhook_id)
     await webhook.delete_message(message.id)
+
+async def character_info():
+    character = get_bot()
+
+async def get_bot():
+    folder_path = "./characters"
+    bot_dict = {}  # Dictionary to store bot name and info
+
+    # Iterate over each file in the directory
+    for filename in os.listdir(folder_path):
+        file_path = os.path.join(folder_path, filename)
+        if filename.endswith('.json'):
+            # Read the JSON file
+            with open(file_path, 'r') as f:
+                try:
+                    # Load JSON data
+                    data = json.load(f)
+                    # Extract the name field and append to names list
+                    name = data.get('name')
+                    info = data.get('info')
+                    if name and info:
+                        # Put the bot name and info in a dictionary
+                        bot_dict[name] = info
+                except json.JSONDecodeError as e:
+                    print(f"Error parsing {filename}: {e}")
+
+    return bot_dict
+
+
 
 # Well Fuck, I need to redo the memory first!!!
