@@ -52,7 +52,7 @@ async def delete(message:discord.Message):
     await webhook.delete_message(message.id)
 
 async def character_info():
-    character = get_bot()
+    character = await get_bot()
     result_str = "\n".join([f"{name}: {info}" for name, info in character.items()])
     return result_str
 

@@ -71,23 +71,15 @@ async def on_ready():
 
     # I don't know how this work
 
-    # async def character_info(interaction: discord.Interaction):
-    #     characters = main.character_info()
-    #     await interaction.response.send_message(characters)
-
-    # character_info_command = app_commands.Command(
-    #     name="character_info",
-    #     description="Show a list of available characters",
-    #     callback=character_info
-    # )
-
-    # tree.add_command(character_info_command)
-
-    
+    # Initialize the Commands   
 
     await tree.sync(guild=None)  
     print(f'Discord Bot is up and running.')
 
+@tree.command(name="character_list", description="Show a list of available characters!")
+async def character_list(interaction: discord.Interaction):
+    characters = await main.character_info()  # Fetch character info asynchronously
+    await interaction.response.send_message(characters, ephemeral=True)  # Send the response
 
 
 @client.event
