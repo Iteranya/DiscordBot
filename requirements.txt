@@ -6,4 +6,3 @@ pillow
 requests
 aiohttp
 xtts-api-server
-pytesseract
