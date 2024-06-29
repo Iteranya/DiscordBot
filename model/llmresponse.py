@@ -3,10 +3,11 @@ import util
 from typing import Any
 
 import config
+from process import controller
 
+# Let's separate the sending part of
 async def handle_llm_response(content: str, response: dict[str, Any]) -> None:
     llm_response = response
-
     try:
         data = llm_response['results'][0]['text']
     except KeyError:
@@ -18,7 +19,7 @@ async def handle_llm_response(content: str, response: dict[str, Any]) -> None:
     cleaned_data = remove_string_before_final(cleaned_data)
     llm_message = cleaned_data
     
-    queue_item = {
+    queue_response = {
         "response": llm_message, 
         "content": content,
         }
@@ -26,10 +27,10 @@ async def handle_llm_response(content: str, response: dict[str, Any]) -> None:
     if not llm_message:
         await util.write_to_log("hm, llm_message is empty..")
         return
+    
+    await controller.process_ai_message(queue_response)
 
-    await util.write_to_log("LLM response is: " + llm_message)
-
-    config.queue_to_send_message.put_nowait(queue_item)
+    
 
 def remove_last_word_before_final_colon(text: str) -> str:
     # Define the regex pattern to find the last word before the final colon

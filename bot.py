@@ -65,7 +65,7 @@ async def on_ready():
 
     # Setup the 'tasks' that will be queued
     asyncio.create_task(apiconfig.send_to_model_queue())
-    asyncio.create_task(apiconfig.send_to_stable_diffusion_queue())
+    #asyncio.create_task(apiconfig.send_to_stable_diffusion_queue())
     asyncio.create_task(apiconfig.send_to_discord_queue())
 
     # Command to Edit Message (You Right Click On It)

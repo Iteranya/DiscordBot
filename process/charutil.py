@@ -25,11 +25,9 @@ async def get_card(bot_name: str):
                 # Open and load JSON file
                 with open(filepath, 'r', encoding='utf-8') as file:
                     data = json.load(file)
-                    print(data['name'] + str(bot_name).lower())
 
                 # Check if 'name' field matches target_name
                 if "name" in data and str(data["name"]).lower() == str(bot_name).lower():
-                    print("success")
                     return data
             except json.JSONDecodeError:
                 print(f"Error decoding JSON in file: {filepath}")

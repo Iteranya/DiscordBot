@@ -1,9 +1,11 @@
 import re
 
 # Test getting message history
-async def get_channel_history(channel):
+async def get_channel_history(channel,append=None,n=20):
     history = []
-    async for message in channel.history(limit=20):
+    if append:
+        history.append(append)
+    async for message in channel.history(limit=n):
         name = str(message.author.display_name)
 
         # Sanitize the name by removing spaces, special characters, and converting to lowercase
@@ -14,7 +16,7 @@ async def get_channel_history(channel):
             history.append(content.strip())
         else:
             history.append(f"[Reply] {sanitized_name}: {content.strip()}")
-
+        
     # Reverse the order of the collected messages
     history.reverse()
     contents = "\n\n".join(history)

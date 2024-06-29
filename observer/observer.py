@@ -17,7 +17,7 @@ async def bot_behavior(message: discord.Message, client: discord.Client) -> bool
     if reply is not None and replied:
         for bot in list(botlist):
             if str(replied[0])==bot:
-                await bot_think(message, bot.lower(), "")
+                await bot_think(message, bot.lower())
                 return True
 
     #The Fuzzy Logic Part~
@@ -29,13 +29,8 @@ async def bot_behavior(message: discord.Message, client: discord.Client) -> bool
          # Check for each word in the list if it is present in the text
         for bot in botlist:
             if re.search(bot.lower(), text.lower()):
-                await bot_think(message, bot.lower(), reply)
+                await bot_think(message, bot.lower())
                 return True
-
-        # Check if contains the word 'https://www.instagram.com' For the silly function I tried to implement :v
-        if re.search("https://www.instagram.com/p/", str(text)):
-            await instagram_replace(message, reply)
-            return True
 
         # Check if contains the word 'Debugus Starticus!'
         if re.search("Debugus Starticus!", str(text)):
@@ -46,10 +41,6 @@ async def bot_behavior(message: discord.Message, client: discord.Client) -> bool
 
     return False
 
-async def bot_think(message: discord.Message, bot: str, reply: str) -> None:
-    await controller.think(message, bot, reply)
+async def bot_think(message: discord.Message, bot: str) -> None:
+    await controller.think(message, bot)
     return
-
-async def instagram_replace(message: discord.Message, reply: str) -> None:
-    await controller.instagram_picuki_extras(message, reply)
-    return 
