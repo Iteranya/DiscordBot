@@ -2,34 +2,66 @@ Aktiva AI - A Self Hosted AI Discord Bot
 
 Big thank you to @badgids for making this possible, hehe~
 
+## FEATURES!!!
+
+### Seamless Character Swapping
+- There is only one slash command, and that is to bring up the character list!
+- Because you only need to say a character's name or answer to their reply
+- All characters uses Webhooks! So different avatar for different name~
+- Adding character is as easy as making a json and putting them in the characters folder! (refer to character MD file please)
+  
+### Image Recognition
+- Uses the all new [Microsoft's Florence 2 AI](https://huggingface.co/microsoft/Florence-2-base-ft) for object recognition
+- Uses Llava by default for vibe detection
+- Combined, this puppy can *almost* beat most Open Source Image detection out there! Recognizing the object and getting the vibe and aesthetic at the same time!
+
+### Character Text Edit and Deletion
+- Yes! You can edit your character's response like it's SillyTavern
+- Yes! You can delete your character's response!
+- No! You cannot regenerate character's response, I should really add that feature
+
+### Pseudo Large Action Model Tech Demo!!!
+- Uses GBNF Scripting to let the AI understand simple commmand.
+- Sample command included in lam.py.
+- Use > at the beginning your message (while also mentioning a bot's name) to trigger the LAM
+- There's not many feature since it was only implemented a few hours ago...
+- Honestly not a feature,  more like a neat little trick the AI can do..
+- (This is partly another joke about Rabbit R1)
+- ((All available commands are written in lam.py))
+- (((Grammar Creation still required when adding new commmand)))
+- ((((Character need to be told about the command thing in their definition to properly use it))))
+- (((((Remind me to add proper intergration, this is still barebones)))))
+
+### Stable Multi-line Support
+- Uses some epic prompt enginneering to keep the AI stable (not that epic actually)
+- If character is made in the correct format, the AI shouldn't hallucinate much outside of their character
+- That's all~
+
 ## Prerequisites
 
-Download Koboldcpp here:
-[Koboldcpp](https://github.com/LostRuins/koboldcpp)
-
+### Large Language Model
 If you want to be cultured, you'll also need to download one of these bad boys~
 
-- [Stheno - One of the best Llama 8B Model](https://huggingface.co/Lewdiculous/L3-8B-Stheno-v3.1-GGUF-IQ-Imatrix) 
-- [Anjir - Top Performer in Chaiverse Leaderboard](https://huggingface.co/Hastagaras/Anjir-8B-L3?not-for-all-audiences=true)
-- [Nyanade - One of the best Llama 7B Model](https://huggingface.co/Lewdiculous/Nyanade_Stunna-Maid-7B-v0.2-GGUF-IQ-Imatrix)
+- [Stheno - One of the best Llama 8B Model](https://huggingface.co/Lewdiculous/L3-8B-Stheno-v3.1-GGUF-IQ-Imatrix) <- The Most Stable One Yet
+- [Anjir - Top Performer in Chaiverse Leaderboard](https://huggingface.co/Hastagaras/Anjir-8B-L3?not-for-all-audiences=true) <- Ranked High On Chaiverse
+- [Nyanade - One of the best Llama 7B Model](https://huggingface.co/Lewdiculous/Nyanade_Stunna-Maid-7B-v0.2-GGUF-IQ-Imatrix) <- 7B Model, Use At Your Own Risk
 
+### Koboldcpp
+Requires Koboldcpp for back end, download it here:
+[Koboldcpp](https://github.com/LostRuins/koboldcpp)
 
-### Stable Diffusion
-~~- bot supports stable diffusion but I recommend using SDXL as the bot will send a prompt to SD in natural language and previous SD (like SD1.5) would struggle~~
+### Florence 2
 
-Still a work in progress, but I will definitely not be sending prompt to SD in Natural Language! 
-
-Cuz I got GBNF, take that corpo garbage!!!
-
-### Koboldcpp, OpenAI API, Mistral API
-- The bot supports koboldcpp API
-- ~~but also OpenAI-compatible backends. Look in configurations folder for examples. Put your API key in the~~ ~~'Bearer' line~~ Ahaha! No, never.
-
+- Microsoft New Visual AI
+- Decent, ish
+- By default this AI will use both Florence and Llava embedding at the same time
+- Florence for Object Recognition and OCR
+- Llava for Image Vibe Detection
+ 
 ### Additional configuration needed to run the bot
 - Discord API key in .env in the global variable
 - make new character json files in the characters folder
 - Or just, yknow, make lots and lots of character json file!!! Refer to characters/default.json for example
-- Character Kisna originally made by Bronya Rand
 
 
 ## Instructions:
@@ -41,8 +73,7 @@ To run this bot:
 3. Make a .env file as written in example.env
 4. Install the requirements. I suggest using an Anaconda or Miniconda instance.
     ```pip install -r requirements.txt```
-5. I might have messed up with the requirements.txt, but I think you also need to download and install tesseract.
-6. Run the bot with `python bot.py`
+5. Run the bot with `python bot.py`
 
 ## Character creation
 
@@ -55,25 +86,15 @@ Refer to README.md file in the characters folder.
 - [x] Fixed the Webhook not detecting reply, (hopefully I don't get rate limited)
 - [x] Refactor this whole entire mess...
 - [x] Redo the character trigger and swapping system with webhook.
-- [ ] Implement GBNF for literal fucking Large Action Model feature.
-- [ ] Enable support for ~~Character.ai~~, TavernAI, SillyTavern, etc. character formats. (currently not practical)
-- [ ] Make User Friendly UI to set things up.
+- [x] Implement GBNF for literal fucking Large Action Model feature.
+- [ ] Add a nicer way to add the Large Action Model Feature
 
 ## Known Issue:
-- Character Memory 
-  - There's no easy way to tweak what character remembers (FIXED)
-  - Character has a separate memory for each user (FIXED)
-  - Character can't see the content of the channel (FIXED)
 - Cannot Reply In Thread
   - Skill Issue on my part, will figure it out later
-- No Slash Command
-  - Not necessarily an issue, but all setup happens in the code, I want to add more slash command to change stuff like API Access, System Prompt, Editing Character Definition, Making New Character, and such. 
 - Terrible Documentation
   - As in like, I did not make any proper Github Commit Comment :v
   - Honestly this whole thing started as a joke, if you see the Read Me file, it's all just irony
   - I never expected it to work this well
-- System Prompt
-  - System Prompt is just awful, the instruction sent to the AI is still designed for RP and not Discord Chat (FIXED)
-  - Excessive use of Emoji, Kaomoji, and all that stuff (FIXED)
 
-Yeah that's all the current issue.
+Yeah that's all the current issue. Let me know if there's another one, have fun then~
