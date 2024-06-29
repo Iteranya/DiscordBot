@@ -4,7 +4,6 @@ from io import BytesIO
 import io
 import json
 from PIL import Image
-import pytesseract
 import torch
 
 import discord
@@ -57,21 +56,6 @@ async def read_image(message):
         except Exception as e:
             print(f"An error occurred: {e}")
             return image_description
-            
-
-async def process_text(image_bytes):
-    try:        
-        image = Image.open(BytesIO(image_bytes))
-        # OCR~
-        recognized_text = pytesseract.image_to_string(image).strip()
-        #Toggle Only Text Recognition
-        return recognized_text 
-    except Exception as e:
-        # Handle any other exception that was not explicitly caught
-        error_msg = f"An error occurred: {str(e)}"
-        await util.write_to_log(error_msg)
-
-        return "Image Text Recognition Error"
 
 
 async def process_image(image_bytes):
