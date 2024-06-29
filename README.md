@@ -1,6 +1,4 @@
-Aktiva AI - A Self Hosted AI Discord Bot
-
-Big thank you to @badgids for making this possible, hehe~
+# Aktiva AI - A Self Hosted AI Discord Bot
 
 ## FEATURES!!!
 
@@ -98,3 +96,11 @@ Refer to README.md file in the characters folder.
   - I never expected it to work this well
 
 Yeah that's all the current issue. Let me know if there's another one, have fun then~
+
+## Credits!
+
+- Big thank you to @badgids for the fork (even though this has no resemblance to the original)
+- Bronya Rand for creating Kisna Kaalana (the default character)
+- All the Beta Tester at Ambruk Academy Discord Server
+- You <3
+
