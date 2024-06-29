@@ -15,6 +15,8 @@ queue_to_process_message = asyncio.Queue()
 queue_to_process_image = asyncio.Queue()
 queue_to_send_message = asyncio.Queue()
 
+
+
 queue_to_process_everything = asyncio.Queue()
 
 florence = None

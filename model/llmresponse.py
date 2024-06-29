@@ -19,16 +19,16 @@ async def handle_llm_response(content: str, response: dict[str, Any]) -> None:
     cleaned_data = remove_string_before_final(cleaned_data)
     llm_message = cleaned_data
     
-    queue_response = {
+    message = {
         "response": llm_message, 
         "content": content,
         }
 
     if not llm_message:
         await util.write_to_log("hm, llm_message is empty..")
-        return
+        return None
     
-    await controller.process_ai_message(queue_response)
+    return message
 
     
 

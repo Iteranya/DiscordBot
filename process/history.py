@@ -15,7 +15,7 @@ async def get_channel_history(channel,append=None,n=20):
         if content.startswith("[System"):
             history.append(content.strip())
         else:
-            history.append(f"[Reply] {sanitized_name}: {content.strip()}")
+            history.append(f"[Reply] {sanitized_name}: {content.strip()}\n[System Action: <None>]")
         
     # Reverse the order of the collected messages
     history.reverse()

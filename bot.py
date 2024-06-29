@@ -22,6 +22,7 @@ from transformers.dynamic_module_utils import get_imports
 from transformers import AutoProcessor, AutoModelForCausalLM 
 import warnings
 from huggingface_hub import file_download
+from process import controller
 
 # Suppress the specific FutureWarning from huggingface_hub
 warnings.filterwarnings("ignore", category=FutureWarning, module="huggingface_hub.file_download")
@@ -64,9 +65,11 @@ async def on_ready():
     await apiconfig.api_status_check(config.text_api["address"] + config.text_api["model"], headers=config.text_api["headers"])
 
     # Setup the 'tasks' that will be queued
-    asyncio.create_task(apiconfig.send_to_model_queue())
-    #asyncio.create_task(apiconfig.send_to_stable_diffusion_queue())
-    asyncio.create_task(apiconfig.send_to_discord_queue())
+    # asyncio.create_task(apiconfig.send_to_model_queue())
+    # asyncio.create_task(apiconfig.send_to_stable_diffusion_queue())
+    # asyncio.create_task(apiconfig.send_to_discord_queue())
+
+    asyncio.create_task(controller.think())
 
     # Command to Edit Message (You Right Click On It)
     edit_message = discord.app_commands.ContextMenu(

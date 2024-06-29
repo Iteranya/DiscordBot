@@ -17,8 +17,8 @@ async def create_text_prompt(
     
     prompt = character + history + "\n[System Note:"+jb+ "]\n\n[Reply] " + bot["name"] + ": "
 
-    stopping_strings = ["[System", "[SYSTEM", "(System","(SYSTEM", user + ":", bot["name"] +
-                        ":", "[Reply", "[REPLY"] 
+    stopping_strings = ["[System", "(System", user + ":", bot["name"] +
+                        ":", "[Reply", "(Reply"] 
     
     stopping_strings = set(stopping_strings)
     stopping_strings = list(stopping_strings)

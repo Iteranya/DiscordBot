@@ -3,6 +3,7 @@ import process.controller as controller
 from observer import function
 import discord
 from process import history
+import config
 
 # This is the main code that deals with determining what type of request is being given.
 ## Also the gateway to LAM
@@ -42,5 +43,9 @@ async def bot_behavior(message: discord.Message, client: discord.Client) -> bool
     return False
 
 async def bot_think(message: discord.Message, bot: str) -> None:
-    await controller.think(message, bot)
+    queue_item = {
+        "message" : message,
+        "bot" : bot
+    }
+    config.queue_to_process_everything.put_nowait(queue_item)
     return
