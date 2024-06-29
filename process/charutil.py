@@ -48,12 +48,14 @@ async def get_character_prompt(json_card: dict[str, Any] | None) -> str | None:
         character = character + "Your persona: " + json_card["persona"] + ". "
 
         # Instructions on what the bot should do. This is where an instruction model will get its stuff.
-        character = character + json_card["instructions"]
 
         examples = json_card["examples"]  # put example responses here
 
-        # Add "<|eot_id|>" after each example
-        #modified_examples = [example + "<|eot_id|>" for example in examples]
+        for example in examples:
+            if example.startswith("[System"):
+                pass
+            else:
+                example = f"[Reply] {example}"
 
         # Example messages!
         character_prompt = character + " A history reference to your speaking quirks and behavior: " + \

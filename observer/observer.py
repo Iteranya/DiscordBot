@@ -39,7 +39,7 @@ async def bot_behavior(message: discord.Message, client: discord.Client) -> bool
 
         # Check if contains the word 'Debugus Starticus!'
         if re.search("Debugus Starticus!", str(text)):
-            await history.get_channel_history(message.channel)
+            print(await history.get_channel_history(message.channel))
             return True
 
         return False

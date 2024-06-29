@@ -28,7 +28,8 @@ async def think(message: discord.Message, bot: str, reply: str) -> None:
         return
     
     if message.attachments:
-        image_description = await image_process(message)
+        if(config.florence):
+            image_description = await image_process(message)
         await convo(message,json_card,reply, image_description)
     else:
         await convo(message, json_card, reply, None)
@@ -77,7 +78,7 @@ async def convo(message: discord.Message, json_card: dict[str, Any], reply: str,
             user_input, 
             user, 
             character_prompt, 
-            json_card['name'], 
+            json_card, 
             context, 
             reply, 
             config.text_api, 
@@ -128,23 +129,15 @@ async def create_text_prompt(
     image_description,
     image_data
  ) -> str:
-    jb = f"[System Note: The following reply will be written in a way that portrays {bot}'s character in RP format. In less than 4 paragraphs.]\n"
-    if not image_data:
-        image_prompt = ""
-    elif image_description:
-        image_prompt = f"\n[System Note: {user} sent the following attachement:" + image_description + "]\n"
-    else:
-        image_prompt = f"\n[System Note: {user} sent an image attachment]"
+    jb = bot["instructions"]
     
-    prompt = character + history + image_prompt + "\n\n[Reply] " + bot + ": "
+    prompt = character + history +jb+ "\n\n[Reply] " + bot["name"] + ": "
 
-    stopping_strings = ["[System", "[SYSTEM", "(System","(SYSTEM", user + ":", bot +
+    stopping_strings = ["[System", "[SYSTEM", "(System","(SYSTEM", user + ":", bot["name"] +
                         ":", "[Reply", "[REPLY"] 
     
-    print(stopping_strings)
     stopping_strings = set(stopping_strings)
     stopping_strings = list(stopping_strings)
-    print(image_prompt)
     data = text_api["parameters"]
     
     data.update({"prompt": prompt})
@@ -155,87 +148,3 @@ async def create_text_prompt(
     data_string = json.dumps(data)
     data.update({"images": []})
     return data_string
-
-# def add_colon_to_string(string):
-#     return string + ':'
-
-# def process_names(names):
-#     processed_names = set()
-#     for name in names:
-#         processed_names.add(f"{name.lower()}:")
-#         #processed_names.add(add_colon_to_string(name.lower()))
-#         processed_names.add(f"{name}:")
-
-#     return processed_names
-
-# async def generate_name_variations(history, pseudonym):
-#     user_list = function.get_user_list(history)
-#     bot_list = await function.get_bot_list()
-#     if pseudonym:
-#         pseudonym_list = get_keys_from_json()
-#         if(pseudonym_list):
-#             combined_list = set(user_list + bot_list + pseudonym_list)
-#     combined_list = set(user_list)
-#     name_variations = process_names(combined_list)
-
-#     return list(name_variations)
-
-# Call the function and store the result in a variable
-
-# async def process_pseudonym(user,extracted_pseudonym):
-#     name_mapping = json_to_string_map()
-#     result = ""
-#     # Check for specific keywords in the content to apply pseudonyms
-#     for key, pseudonym in name_mapping.items():
-#         if extracted_pseudonym[0] == key:
-#             result = f"{pseudonym}: {extracted_pseudonym[1]}"
-#             print("Pseudonym Found")
-#             return result
-            
-#     result = f"{user}: {extracted_pseudonym[1]}"
-#     print("Pseudonym Not Found")
-#     return result
-
-# def json_to_string_map():
-#     json_file = "Pseudonym.json"
-#     try:
-#         root_path = os.path.dirname(os.path.abspath(__file__))  # Get the absolute path of the current script
-#         json_path = "Pseudonym.json"  # Construct the full path to the JSON file
-#         with open(json_path, 'r') as file:
-#             data = json.load(file)
-#             return data
-#     except FileNotFoundError:
-#         print(f"Error: The file at {json_path} was not found.")
-#         return {}
-#     except json.JSONDecodeError:
-#         print(f"Error: The file at {json_path} is not a valid JSON.")
-#         return {}
-#     except Exception as e:
-#         print(f"An unexpected error occurred: {e}")
-#         return {}
-    
-# def get_keys_from_json():
-#      try:
-#         json_path = "Pseudonym.json"  # Construct the full path to the JSON file
-#         with open(json_path, 'r') as file:
-#             data = json.load(file)
-#             string_list = [f"{value}" for value in data.values()]
-#             return string_list
-#      except FileNotFoundError:
-#          print("No Pseudonym.json found in the root")
-
-# def extract_pseudonym(input_string):
-
-#     # Define the regex pattern to match "user" and "Says something"
-#     pattern = r"^(\w+):\s(.+)$"
-
-#     # Use re.match to find the pattern in the string
-#     match = re.match(pattern, input_string)
-
-#     if match:
-#         user = match.group(1)  # This will be "user"
-#         message = match.group(2)  # This will be "Says something"
-#         return [user,message]
-#     else:
-#         return None
-        

@@ -16,7 +16,6 @@ from typing import Any
 import config
 import util
 from model import llmresponse
-from process import history
 
 async def send_to_model_queue() -> None:
 
@@ -136,11 +135,11 @@ async def send_to_discord_queue() -> None:
                     if not llmreply["content"]["channel"]:
                         for chunk in response_chunks:
                             await send_webhook_message(llmreply["content"]["message"].channel, chunk, character_avatar_url, character_name)
-                    else:
-                        # Send random message on channel
-                        print("Sending random message.")
-                        for chunk in response_chunks:
-                            await send_webhook_message(llmreply["content"]["channel"], chunk, character_avatar_url, character_name)
+                    # else:
+                    #     # Send random message on channel
+                    #     print("Sending random message.")
+                    #     for chunk in response_chunks:
+                    #         await send_webhook_message(llmreply["content"]["channel"], chunk, character_avatar_url, character_name)
                 else:
                     image_file = discord.File(llmreply["image"])
                     # Since we need to send an image, we can't use webhooks directly to send files. Instead, we send the message first and then send the file.
@@ -168,7 +167,6 @@ async def send_webhook_message(channel: discord.TextChannel, content: str, avata
 
     webhook = await channel.create_webhook(name="AktivaAI")
     await webhook.send(content, username=username, avatar_url=avatar_url)
-    #await webhook.delete()
 
 async def set_api(config_file: str) -> dict[str, Any]:
     # Go grab the configuration file for me
