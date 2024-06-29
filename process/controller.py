@@ -15,7 +15,7 @@ from PIL import Image
 from process import qutil
 from process import history
 from typing import Any
-import lam
+from process import lam
 # This part decides what to do with the incoming message
 # Also LAM stuff~(coming soon)
 
@@ -36,11 +36,11 @@ async def think() -> None:
         if json_card is None:
             pass
         
-        if message_content.startswith("inst:"):
+        if message_content.startswith(">"):
             await send_lam_message(message,json_card)
            
 
-        if message.attachments:
+        elif message.attachments:
             if(config.florence):
                 await send_multimodal_message(message,json_card)
             else:
@@ -75,10 +75,16 @@ async def send_lam_message(message, json_card):
     context = await history.get_channel_history(message.channel)
     text_bot_prompt = await qutil.get_text_prompt_queue_item(message,json_card,context)
     llm_response = await apiconfig.send_to_model_queue(text_bot_prompt)
+    if llm_response["response"] is None: 
+        thoughts = "Alright then..."
+    else: 
+        thoughts = llm_response["response"]
 
-    thoughts = llm_response["response"]
     action_bot_prompt = await qutil.get_action_prompt_queue_item(context, thoughts, message, json_card)
+    text_api = config.text_api
+    data = text_api["parameters"]
+    data.update({"stop_sequence": ["[END]"]})
     lam_response = await apiconfig.send_to_model_queue(action_bot_prompt)
-    lam.process_action(lam_response)
+    await lam.process_action(lam_response, message)
 
     return

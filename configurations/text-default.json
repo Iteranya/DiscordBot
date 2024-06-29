@@ -29,7 +29,6 @@
 		"rep_pen_range": 0,
 		"rep_pen_slope": 0.9,
 		"use_default_badwordsids": "True",
-		"newline_as_stopseq": "False",
 		"early_stopping": "True",
 		"sampler_order": [
 			6,
@@ -39,6 +38,8 @@
 			4,
 			2,
 			5
-		]
+		],
+		"grammar":"",
+		"grammar_string":""
     }
 }

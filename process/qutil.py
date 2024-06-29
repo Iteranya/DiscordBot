@@ -64,7 +64,35 @@ async def get_text_prompt_queue_item(message: discord.Message, json_card: dict[s
         return None
 # Design The Grammars Here~
 ## Honestly a Nightmare, so Nothing for now~
-async def get_action_prompt_queue_item(message, json_card):
-    thought = await history.get_channel_history(message.channel,1)
-    
-    return
+async def get_action_prompt_queue_item(context, thought, message, json_card) -> None:
+    user:str = message.author.display_name
+    user = user.replace(" ", "")
+    image_data=None
+    # Clean the user's message to make it easy to read
+    user_input = util.clean_user_message(message.clean_content)
+    character_prompt = await charutil.get_character_prompt(json_card)
+    try:
+        prompt = await promptutil.create_action_prompt(
+            user, 
+            character_prompt, 
+            json_card, 
+            context, 
+            config.text_api, 
+            image_data,
+            message,
+            thought
+            )
+        
+        queue_item = {
+            'prompt': prompt,
+            'message': message,
+            'user_input': user_input,
+            'user': user,
+            'image': None,
+            'channel': None,
+            'character':json_card
+        }
+        return queue_item
+    except Exception as e:
+        print("Prompt Crafting Error")
+        return None
