@@ -59,6 +59,8 @@ default_character_name = config.bot_display_name
 async def send_to_discord(llmreply) -> None:
     # Grab the reply that will be sent
         # Update reactions
+    if llmreply is None:
+        return
     try:
         await llmreply["content"]["message"].add_reaction('✅')
     except Exception as e:
