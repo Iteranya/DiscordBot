@@ -64,11 +64,6 @@ async def on_ready():
     config.text_api = await apiconfig.set_api("text-default.json")
     await apiconfig.api_status_check(config.text_api["address"] + config.text_api["model"], headers=config.text_api["headers"])
 
-    # Setup the 'tasks' that will be queued
-    # asyncio.create_task(apiconfig.send_to_model_queue())
-    # asyncio.create_task(apiconfig.send_to_stable_diffusion_queue())
-    # asyncio.create_task(apiconfig.send_to_discord_queue())
-
     asyncio.create_task(controller.think())
 
     # Command to Edit Message (You Right Click On It)
@@ -92,6 +87,7 @@ async def on_ready():
     await tree.sync(guild=None)  
     print(f'Discord Bot is up and running.')
 
+# This is what a slash command looks like apparently
 @tree.command(name="character_list", description="Show a list of available characters!")
 async def character_list(interaction: discord.Interaction):
     characters = await main.character_info()  # Fetch character info asynchronously
