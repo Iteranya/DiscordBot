@@ -10,13 +10,6 @@ global image_api
 global character_card
 global tts_config, tts_model, gpt_cond_latent, speaker_embedding
 
-# Other configurations
-queue_to_process_message = asyncio.Queue()
-queue_to_process_image = asyncio.Queue()
-queue_to_send_message = asyncio.Queue()
-
-
-
 queue_to_process_everything = asyncio.Queue()
 
 florence = None
