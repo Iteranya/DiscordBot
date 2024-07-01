@@ -11,7 +11,7 @@ async def create_text_prompt(
     message:discord.message
  ) -> str:
     jb = bot["instructions"]
-    
+    #jb = "" # Toggle this to disable JB
     prompt = character + history + jb+"\n\n[Reply] " + bot["name"] + ": "
 
     stopping_strings = ["[System", "(System", user + ":", bot["name"] +

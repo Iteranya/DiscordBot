@@ -49,7 +49,7 @@ async def handle_error_response(content: dict[str, Any], e: Exception) -> None:
     queue_item={
         "text_message": content
     }
-    send_to_discord(queue_item)
+    await send_to_discord(queue_item)
     return None
 # Alright, Time To Split This Fucker...
 default_character_url = "https://i.imgur.com/mxlcovm.png"
