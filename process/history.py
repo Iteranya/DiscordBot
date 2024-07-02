@@ -1,11 +1,13 @@
 import re
 
+import discord
+
 # Test getting message history
-async def get_channel_history(channel,append=None,n=20):
+async def get_channel_history(channel: discord.abc.MessageableChannel, append: str | None = None, limit: int = 20):
     history = []
     if append:
         history.append(append)
-    async for message in channel.history(limit=n):
+    async for message in channel.history(limit=limit):
         name = str(message.author.display_name)
 
         # Sanitize the name by removing spaces, special characters, and converting to lowercase
