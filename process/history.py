@@ -3,7 +3,7 @@ import re
 import discord
 
 # Test getting message history
-async def get_channel_history(channel: discord.abc.MessageableChannel, append: str | None = None, limit: int = 20):
+async def get_channel_history(channel, append: str | None = None, limit: int = 50):
     history = []
     if append:
         history.append(append)

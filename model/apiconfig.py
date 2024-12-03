@@ -2,7 +2,7 @@ import requests
 import json
 import os
 import discord
-
+import re
 from aiohttp import ClientSession
 from aiohttp import ClientTimeout
 from aiohttp import TCPConnector
@@ -76,6 +76,7 @@ async def send_to_discord(llmreply) -> None:
 
 async def send_as_bot(llmreply):
     response = llmreply["response"]
+    response = clean_text(response)
     response_chunks = [response[i:i+1500] for i in range(0, len(response), 1500)]
 
     character_name = llmreply["content"]["character"]["name"]  # Placeholder for character name
@@ -92,7 +93,10 @@ async def send_as_sytem(llmreply):
 
   # Function to send messages using a webhook
 async def send_webhook_message(channel: discord.TextChannel, content: str, avatar_url: str, username: str) -> None:
+    if isinstance(channel, discord.DMChannel):
+        return
     webhook_list = await channel.webhooks()
+    content = clean_text(content)
 
     for webhook in webhook_list:
         if webhook.name == "AktivaAI":
@@ -107,6 +111,58 @@ async def send_webhook_message(channel: discord.TextChannel, content: str, avata
 
 ## TODO: Put these somewhere else
 
+def clean_emojis(text):
+    """
+    Remove emojis from a given string.
+    
+    Args:
+        text (str): Input string that may contain emojis
+    
+    Returns:
+        str: String with emojis removed
+    """
+    # Regex pattern to match most emoji characters
+    emoji_pattern = re.compile("["
+        u"\U0001F600-\U0001F64F"  # emoticons
+        u"\U0001F300-\U0001F5FF"  # symbols & pictographs
+        u"\U0001F680-\U0001F6FF"  # transport & map symbols
+        u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
+        u"\U00002702-\U000027B0"
+        u"\U000024C2-\U0001F251"
+        "]+", flags=re.UNICODE)
+    
+    return emoji_pattern.sub(r'', text)
+
+def clean_text(text):
+    """
+    Remove emojis, trailing whitespace, line breaks, and bracket-like characters from a given string.
+    
+    Args:
+        text (str): Input string that may contain emojis, whitespace, line breaks, and trailing characters
+    
+    Returns:
+        str: Cleaned string 
+    """
+    # Emoji pattern
+    emoji_pattern = re.compile("["
+        u"\U0001F600-\U0001F64F"  # emoticons
+        u"\U0001F300-\U0001F5FF"  # symbols & pictographs
+        u"\U0001F680-\U0001F6FF"  # transport & map symbols
+        u"\U0001F1E0-\U0001F1FF"  # flags (iOS)
+        u"\U00002702-\U000027B0"
+        u"\U000024C2-\U0001F251"
+        "]+", flags=re.UNICODE)
+    
+    # Remove trailing whitespace and line breaks first
+    text = text.rstrip()
+    
+    # Remove emojis
+    text_without_emoji = emoji_pattern.sub(r'', text)
+    
+    # Remove trailing bracket-like characters, with more inclusive matching
+    cleaned_text = re.sub(r'[)\]>:;,\s]+$', '', text_without_emoji)
+    
+    return cleaned_text.rstrip()
 
 
 
