@@ -96,7 +96,7 @@ async def send_webhook_message(channel: discord.TextChannel, content: str, avata
     if isinstance(channel, discord.DMChannel):
         return
     webhook_list = await channel.webhooks()
-    content = clean_text(content)
+    # content = clean_text(content)
 
     for webhook in webhook_list:
         if webhook.name == "AktivaAI":
