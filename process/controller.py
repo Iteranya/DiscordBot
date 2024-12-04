@@ -32,7 +32,7 @@ async def think() -> None:
 
         json_card = await charutil.get_card(bot)
         message_content = message.content # This is the string message
-
+        
         if json_card is None:
             pass
         
