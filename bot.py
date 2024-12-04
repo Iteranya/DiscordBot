@@ -37,18 +37,17 @@ if discord_token is None:
 client = config.client
 
 def fixed_get_imports(filename: str | os.PathLike) -> list[str]:
-    if not str(filename).endswith("modeling_florence2.py"):
-        return get_imports(filename)
+    # if not str(filename).endswith("modeling_florence2.py"):
+    #     return get_imports(filename)
     imports = get_imports(filename)
     if "flash_attn" in imports:
         imports.remove("flash_attn")
     return imports
 
-with patch("transformers.dynamic_module_utils.get_imports", fixed_get_imports):
-    config.florence = AutoModelForCausalLM.from_pretrained("microsoft/Florence-2-base-ft", 
-                                                           trust_remote_code=True, 
-                                                           attn_implementation='sdpa')
-    config.florence_processor = AutoProcessor.from_pretrained("microsoft/Florence-2-base-ft", 
+with patch("transformers.dynamic_module_utils.get_imports"):
+    config.florence = AutoModelForCausalLM.from_pretrained("MiaoshouAI/Florence-2-base-PromptGen-v2.0", 
+                                                        trust_remote_code=True)
+    config.florence_processor = AutoProcessor.from_pretrained("MiaoshouAI/Florence-2-base-PromptGen-v2.0", 
                                                               trust_remote_code=True)
 tree = app_commands.CommandTree(client)
 

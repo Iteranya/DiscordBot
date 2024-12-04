@@ -49,12 +49,16 @@ async def think() -> None:
         else:
             await send_llm_message(message, json_card)
         config.queue_to_process_everything.task_done()
-
+inline_comprehension = True
 async def send_multimodal_message(message:discord.message, json_card):
     print("Multimodal Processing...")
     image_sys_message = await qutil.get_image_message_queue_item(message)
-    await apiconfig.send_to_discord(image_sys_message)
     context = await history.get_channel_history(message.channel)
+    if inline_comprehension:
+        context+="\n"+str(image_sys_message["content"])
+    else:
+        await apiconfig.send_to_discord(image_sys_message)
+    
     text_bot_prompt = await qutil.get_text_prompt_queue_item(message,json_card,context)
     llm_response = await apiconfig.send_to_model_queue(text_bot_prompt)
     await apiconfig.send_to_discord(llm_response)

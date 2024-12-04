@@ -13,6 +13,7 @@ async def get_image_message_queue_item(message):
     message.content = f"\n[System Note: User sent the following attachment: {image_description}]"
     queue_item = {
         "simple_message": message, 
+        "content":message.content
     }
 
     #config.queue_to_send_message.put_nowait(queue_item)
