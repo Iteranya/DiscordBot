@@ -5,12 +5,13 @@
 ### Seamless Character Swapping
 - There is only one slash command, and that is to bring up the character list!
 - Because you only need to say a character's name or answer to their reply
-- All characters uses Webhooks! So different avatar for different name~
+- Use double slash `//` in the beginning of your message to hide it from the AI and context (the emoji still appears, but it won't reply)
+- All characters uses Webhooks! So different avatar for different name~ 
 - Adding character is as easy as making a json and putting them in the characters folder! (refer to character MD file please)
   
 ### Image Recognition
-- Uses the all new [Microsoft's Florence 2 AI](https://huggingface.co/microsoft/Florence-2-base-ft) for object recognition
-- Uses Llava by default for vibe detection
+- Uses the the finetune of Microsoft's Florence 2 AI [MiaoshouAI/Florence-2-base-PromptGen-v2.0](MiaoshouAI/Florence-2-base-PromptGen-v2.0) for object recognition
+- ~~Uses Llava by default for vibe detection~~ Optional!!!
 - Combined, this puppy can *almost* beat most Open Source Image detection out there! Recognizing the object and getting the vibe and aesthetic at the same time!
 
 ### Character Text Edit and Deletion
@@ -33,7 +34,9 @@
 ### Stable Multi-line Support
 - Uses some epic prompt enginneering to keep the AI stable (not that epic actually)
 - If character is made in the correct format, the AI shouldn't hallucinate much outside of their character
-- That's all~
+- Supports both Assistant mode and Roleplay mode!!!
+- Can add line breaks, yes, ask your AI to write things past discord word limit too!
+- Very stable, no need to worry about the AI impersonating you!
 
 ## Prerequisites
 
@@ -41,20 +44,17 @@
 If you want to be cultured, you'll also need to download one of these bad boys~
 
 - [Stheno - One of the best Llama 8B Model](https://huggingface.co/Lewdiculous/L3-8B-Stheno-v3.1-GGUF-IQ-Imatrix) <- The Most Stable One Yet
-- [Anjir - Top Performer in Chaiverse Leaderboard](https://huggingface.co/Hastagaras/Anjir-8B-L3?not-for-all-audiences=true) <- Ranked High On Chaiverse
 - [Nyanade - One of the best Llama 7B Model](https://huggingface.co/Lewdiculous/Nyanade_Stunna-Maid-7B-v0.2-GGUF-IQ-Imatrix) <- 7B Model, Use At Your Own Risk
 
 ### Koboldcpp
 Requires Koboldcpp for back end, download it here:
 [Koboldcpp](https://github.com/LostRuins/koboldcpp)
 
-### Florence 2
+### Florence 2 Finetune
 
 - Microsoft New Visual AI
-- Decent, ish
-- By default this AI will use both Florence and Llava embedding at the same time
-- Florence for Object Recognition and OCR
-- Llava for Image Vibe Detection
+- Finetuned to detect character appearance and image composition
+- Text Recognition too!!
  
 ### Additional configuration needed to run the bot
 - Discord API key in .env in the global variable
@@ -67,7 +67,7 @@ Requires Koboldcpp for back end, download it here:
 To run this bot:
 
 1. Load the LLM model of your choice in Koboldcpp (Make sure it's marked as not safe for audience)
-2. Download this repository ~~[OpenKlyde](https://github.com/badgids/OpenKlyde)~~ [DiscordBot](https://github.com/Ambruk-chan/DiscordBot)
+2. Download this repository [DiscordBot](https://github.com/Iteranya/DiscordBot)
 3. Make a .env file as written in example.env
 4. Install the requirements. I suggest using an Anaconda or Miniconda instance.
     ```pip install -r requirements.txt```
