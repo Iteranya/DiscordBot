@@ -38,7 +38,8 @@ async def think() -> None:
         
         if message_content.startswith(">"):
             await send_lam_message(message,json_card)
-           
+        elif message_content.startswith("//"):
+            pass
 
         elif message.attachments:
             if(config.florence):

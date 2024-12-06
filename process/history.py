@@ -16,6 +16,9 @@ async def get_channel_history(channel, append: str | None = None, limit: int = 5
         content = re.sub(r'<@!?[0-9]+>', '', message.content)  # Remove user mentions
         if content.startswith("[System"):
             history.append(content.strip())
+        elif content.startswith("//"):
+            #do nothing
+            pass
         else:
             # Add the pseudonym function here
             history.append(f"[Reply]{sanitized_name}: {content.strip()}[End]")
