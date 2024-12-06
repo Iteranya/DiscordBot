@@ -154,10 +154,10 @@ async def process_image(image_bytes):
         # First, get a detailed caption
         task_prompt = '<MIXED_CAPTION>'
         image_result = run_example(task_prompt, image)
-        # task_prompt = '<GENERATE_TAGS>'
-        # tag_result = run_example(task_prompt,image)
+        text_prompt = '<OCR>'
+        text_result = run_example(text_prompt,image)
         # Combine the results
-        final_results = f"Image Description: {image_result['<MIXED_CAPTION>']}"
+        final_results = f"Image Description: {image_result['<MIXED_CAPTION>']} |Text inside image: {text_result['<OCR>']}"
         print(final_results)
         return final_results
     except Exception as e:
