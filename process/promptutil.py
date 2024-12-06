@@ -27,6 +27,8 @@ async def create_text_prompt(
     
     data_string = json.dumps(data)
     data.update({"images": []})
+    data.update({"grammar": ''})
+    data.update({"grammar_string": ''})
     return data_string
 
 async def create_action_prompt(

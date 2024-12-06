@@ -1,7 +1,7 @@
 import re
 import util
 from typing import Any
-
+import random
 import config
 from process import controller
 
@@ -18,8 +18,9 @@ async def handle_llm_response(content: str, response: dict[str, Any]) -> None:
     cleaned_data:str = remove_last_word_before_final_colon(data)
     cleaned_data = remove_string_before_final(cleaned_data)
     cleaned_data = cleaned_data.strip()
-    if cleaned_data.endswith("*"):
-        cleaned_data  = remove_fluff(cleaned_data)
+    if cleaned_data.endswith("*.") or cleaned_data.endswith("*"):
+        if random.choice([True, False]):  # 50/50 chance
+            cleaned_data = remove_fluff(cleaned_data)
     llm_message = cleaned_data
     
     message = {
