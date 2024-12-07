@@ -11,7 +11,7 @@
   
 ### Image Recognition
 - Uses the the finetune of Microsoft's Florence 2 AI [MiaoshouAI/Florence-2-base-PromptGen-v2.0](https://huggingface.co/MiaoshouAI/Florence-2-base-PromptGen-v2.0) for object recognition
-- ~~Uses Llava by default for vibe detection~~ Optional!!!
+- ~~Uses Llava by default for vibe detection~~ Optional!!! Because not all LLM are Multimodal
 - Combined, this puppy can *almost* beat most Open Source Image detection out there! Recognizing the object and getting the vibe and aesthetic at the same time!
 
 ### Character Text Edit and Deletion
