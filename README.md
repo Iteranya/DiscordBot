@@ -10,7 +10,7 @@
 - Adding character is as easy as making a json and putting them in the characters folder! (refer to character MD file please)
   
 ### Image Recognition
-- Uses the the finetune of Microsoft's Florence 2 AI [MiaoshouAI/Florence-2-base-PromptGen-v2.0](MiaoshouAI/Florence-2-base-PromptGen-v2.0) for object recognition
+- Uses the the finetune of Microsoft's Florence 2 AI [MiaoshouAI/Florence-2-base-PromptGen-v2.0](https://huggingface.co/MiaoshouAI/Florence-2-base-PromptGen-v2.0) for object recognition
 - ~~Uses Llava by default for vibe detection~~ Optional!!!
 - Combined, this puppy can *almost* beat most Open Source Image detection out there! Recognizing the object and getting the vibe and aesthetic at the same time!
 
