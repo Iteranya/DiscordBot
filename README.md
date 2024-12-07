@@ -10,8 +10,8 @@
 - Adding character is as easy as making a json and putting them in the characters folder! (refer to character MD file please)
   
 ### Image Recognition
-- Uses the the finetune of Microsoft's Florence 2 AI [MiaoshouAI/Florence-2-base-PromptGen-v2.0](MiaoshouAI/Florence-2-base-PromptGen-v2.0) for object recognition
-- ~~Uses Llava by default for vibe detection~~ Optional!!!
+- Uses the the finetune of Microsoft's Florence 2 AI [MiaoshouAI/Florence-2-base-PromptGen-v2.0](https://huggingface.co/MiaoshouAI/Florence-2-base-PromptGen-v2.0) for object recognition
+- ~~Uses Llava by default for vibe detection~~ Optional!!! Because not all LLM are Multimodal
 - Combined, this puppy can *almost* beat most Open Source Image detection out there! Recognizing the object and getting the vibe and aesthetic at the same time!
 
 ### Character Text Edit and Deletion
@@ -85,7 +85,8 @@ Refer to README.md file in the characters folder.
 - [x] Refactor this whole entire mess...
 - [x] Redo the character trigger and swapping system with webhook.
 - [x] Implement GBNF for literal fucking Large Action Model feature.
-- [ ] Add a nicer way to add the Large Action Model Feature
+- [ ] [Add a nicer way to add the Large Action Model Feature](https://huggingface.co/facebook/bart-large-mnli)
+- [ ] Refactor this whole entire mess... AGAIN!!!
 
 ## Known Issue:
 - Cannot Reply In Thread
