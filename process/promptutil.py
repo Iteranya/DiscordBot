@@ -24,11 +24,12 @@ async def create_text_prompt(
     data.update({"stop_sequence": stopping_strings})
     if image_data:
         data.update({"images":[image_data]})
-    
+    data.update({"grammar": ""})
+    data.update({"grammar_string": ""})
+    data.update({"grammars": ""})
     data_string = json.dumps(data)
     data.update({"images": []})
-    data.update({"grammar": ''})
-    data.update({"grammar_string": ''})
+    
     return data_string
 
 async def create_action_prompt(
@@ -43,7 +44,7 @@ async def create_action_prompt(
  ) -> str:
     jb = bot["instructions"]
     
-    prompt = character + history + bot["name"]+ ": " +thought + "\n[System Action:"
+    prompt = character + history + bot["name"]+ ": " +thought + "\n[Action:"
 
     
     
@@ -54,8 +55,7 @@ async def create_action_prompt(
     data = text_api["parameters"]
 
     # Hooo, boy, here we go...
-    grammars =  " root ::= \"[System Action: <\" command \">][END]\"\ncommand ::= (dice|\"Get Profile Picture\"|\"Fortune Cookie\"|\"Debug Command\")\ndice ::= \"Roll Dice: \" num+\nnum ::= (\"1\"|\"2\"|\"3\"|\"4\"|\"5\"|\"6\"|\"7\"|\"8\"|\"9\") "
-                
+    grammars = " root ::= \"[System Action: <\" command \">][END]\"\ncommand ::= (dice|\"Get Profile Picture\"|\"Fortune Cookie\"|\"Debug Command\")\ndice ::= \"Roll Dice: \" num+\nnum ::= (\"1\"|\"2\"|\"3\"|\"4\"|\"5\"|\"6\"|\"7\"|\"8\"|\"9\") "
 
     data.update({"prompt": prompt})
     data.update({"stop_sequence": stopping_strings})

@@ -152,12 +152,10 @@ async def process_image(image_bytes):
             image = image.convert('RGB')
 
         # First, get a detailed caption
-        task_prompt = '<MIXED_CAPTION>'
+        task_prompt = '<MORE_DETAILED_CAPTION>'
         image_result = run_example(task_prompt, image)
-        text_prompt = '<OCR>'
-        text_result = run_example(text_prompt,image)
         # Combine the results
-        final_results = f"Image Description: {image_result['<MIXED_CAPTION>']} |Text inside image: {text_result['<OCR>']}"
+        final_results = f"Image Description: {image_result['<MORE_DETAILED_CAPTION>']}"
         print(final_results)
         return final_results
     except Exception as e:
