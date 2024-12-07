@@ -85,7 +85,7 @@ Refer to README.md file in the characters folder.
 - [x] Refactor this whole entire mess...
 - [x] Redo the character trigger and swapping system with webhook.
 - [x] Implement GBNF for literal fucking Large Action Model feature.
-- [ ] Add a nicer way to add the Large Action Model Feature
+- [ ] [Add a nicer way to add the Large Action Model Feature](https://huggingface.co/facebook/bart-large-mnli)
 
 ## Known Issue:
 - Cannot Reply In Thread
