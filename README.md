@@ -98,8 +98,6 @@ Refer to README.md file in the characters folder.
 - [ ] Refactor this whole entire mess... AGAIN!!!
 
 ## Known Issue:
-- Cannot Reply In Thread
-  - Skill Issue on my part, will figure it out later
 - Terrible Documentation
   - As in like, I did not make any proper Github Commit Comment :v
   - Honestly this whole thing started as a joke, if you see the Read Me file, it's all just irony

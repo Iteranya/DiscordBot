@@ -74,7 +74,7 @@ class EditMessageModal(discord.ui.Modal, title='Edit Message'):
 
 async def delete_message_context(interaction: discord.Interaction, message: discord.Message):
     await interaction.response.send_message("Still a WIP, it doesn't delete it from memory", ephemeral=True)
-    await delete(message)
+    await delete(message,interaction)
 
 async def edit_message_context(interaction: discord.Interaction, message: discord.Message):
     await client.fetch_webhook(message.webhook_id)
@@ -85,9 +85,12 @@ async def edit(message:discord.Message, webhook_id, new_content):
     webhook = await client.fetch_webhook(webhook_id)
     await webhook.edit_message(message_id=message.id,content=new_content)
 
-async def delete(message:discord.Message):
+async def delete(message:discord.Message,interaction:discord.Interaction):
     webhook = await client.fetch_webhook(message.webhook_id)
-    await webhook.delete_message(message.id)
+    if isinstance(interaction.channel,discord.Thread):
+        await webhook.delete_message(message_id=message.id,thread=interaction.channel)
+    else:
+        await webhook.delete_message(message.id)
 
 async def character_info():
     character = await get_bot()
