@@ -3,11 +3,27 @@
 ## FEATURES!!!
 
 ### Seamless Character Swapping
-- There is only one slash command, and that is to bring up the character list!
-- Because you only need to say a character's name or answer to their reply
+- You only need to say a character's name or answer to their reply to trigger them!
+- /list to get the list of all available characters!!!
+- Call upon her name, 'Aktiva-chan' for the default built in AI that can explain how the Bot Works!!!
 - Use double slash `//` in the beginning of your message to hide it from the AI and context (the emoji still appears, but it won't reply)
 - All characters uses Webhooks! So different avatar for different name~ 
 - Adding character is as easy as making a json and putting them in the characters folder! (refer to character MD file please)
+
+### Channel Thread Memory and Location
+- Use slash command to manipulate Memory and Location
+- Memory is located before history context, location is located after history context
+- Each channel and thread has its own memory and location!!!
+- YES SUPPORTS THREADS!!! WOOOOOOOOOOOOOOOOO!!!!!
+- Get yourself a nice private thread with your own AI!!!
+- Mitochondria is the powerhouse of cell
+
+### Stable Multi-line Support
+- Uses some epic prompt enginneering to keep the AI stable (not that epic actually)
+- If character is made in the correct format, the AI shouldn't hallucinate much outside of their character
+- Supports both Assistant mode and Roleplay mode!!!
+- Can add line breaks, yes, ask your AI to write things past discord word limit too!
+- Very stable, no need to worry about the AI impersonating you!
   
 ### Image Recognition
 - Uses the the finetune of Microsoft's Florence 2 AI [MiaoshouAI/Florence-2-base-PromptGen-v2.0](https://huggingface.co/MiaoshouAI/Florence-2-base-PromptGen-v2.0) for object recognition
@@ -30,13 +46,6 @@
 - (((Grammar Creation still required when adding new commmand)))
 - ((((Character need to be told about the command thing in their definition to properly use it))))
 - (((((Remind me to add proper intergration, this is still barebones)))))
-
-### Stable Multi-line Support
-- Uses some epic prompt enginneering to keep the AI stable (not that epic actually)
-- If character is made in the correct format, the AI shouldn't hallucinate much outside of their character
-- Supports both Assistant mode and Roleplay mode!!!
-- Can add line breaks, yes, ask your AI to write things past discord word limit too!
-- Very stable, no need to worry about the AI impersonating you!
 
 ## Prerequisites
 

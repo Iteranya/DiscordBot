@@ -51,6 +51,53 @@ with patch("transformers.dynamic_module_utils.get_imports"):
                                                               trust_remote_code=True)
 tree = app_commands.CommandTree(client)
 
+def setup_commands():
+    group = app_commands.Group(name="aktiva", description="Commands!!!")
+
+    @group.command(name="help", description="Show Aktiva Tutorial")
+    async def aktiva_help(interaction: discord.Interaction):
+        response = main.show_help()
+        await interaction.response.send_message(response, ephemeral=True)
+
+    @group.command(name="list", description="Pull Up A List Of Bots")
+    async def aktiva_list(interaction: discord.Interaction):
+        response = main.character_info()
+        await interaction.response.send_message(response, ephemeral=True)
+
+    @group.command(name="set_location", description="Edit Location Data")
+    async def aktiva_setlocation(interaction: discord.Interaction, location_desc:str):
+        response = main.edit_location(interaction,location_desc)
+        await interaction.response.send_message(response, ephemeral=True)
+
+    @group.command(name="set_global", description="Edit Global Data")
+    async def aktiva_setglobal(interaction: discord.Interaction, global_var:str):
+        response = main.edit_global(interaction,global_var)
+        await interaction.response.send_message(response, ephemeral=True)
+
+    @group.command(name="get_location", description="Edit Location Data")
+    async def aktiva_getlocation(interaction: discord.Interaction):
+        response = main.get_location(interaction)
+        await interaction.response.send_message(response, ephemeral=True)
+
+    @group.command(name="get_global", description="Edit Global Data")
+    async def aktiva_getglobal(interaction: discord.Interaction):
+        response = main.get_global(interaction)
+        await interaction.response.send_message(response, ephemeral=True)
+
+    tree.add_command(group)
+
+
+
+
+
+
+
+
+
+
+
+
+
 @client.event
 async def on_ready():
     # Let owner known in the console that the bot is now running!
@@ -82,16 +129,10 @@ async def on_ready():
     # Initialize the Commands
     tree.add_command(edit_message)
     tree.add_command(delete_message)
+    setup_commands()
 
     await tree.sync(guild=None)  
     print(f'Discord Bot is up and running.')
-
-# This is what a slash command looks like apparently
-@tree.command(name="character_list", description="Show a list of available characters!")
-async def character_list(interaction: discord.Interaction):
-    characters = await main.character_info()  # Fetch character info asynchronously
-    await interaction.response.send_message(characters, ephemeral=True)  # Send the response
-
 
 @client.event
 async def on_message(message):
