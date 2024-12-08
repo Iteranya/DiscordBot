@@ -8,11 +8,12 @@ async def create_text_prompt(
     history: str,
     text_api,
     image_data,
-    message:discord.message
+    message:discord.message,
+    dimension
  ) -> str:
     jb = bot["instructions"]
     #jb = "" # Toggle this to disable JB
-    prompt = character + history + jb+"\n[Reply]\n " + bot["name"] + ":"
+    prompt = character + dimension["description"] +history + jb+"\n[Reply]\n " + bot["name"] + ":"
 
     stopping_strings = ["[System", "(System", user + ":",  "[Reply", "(Reply", "System Note", "[End]","[/"] 
     

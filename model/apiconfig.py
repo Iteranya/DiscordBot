@@ -78,33 +78,59 @@ async def send_as_bot(llmreply):
     response = llmreply["response"]
     response = clean_text(response)
     response_chunks = [response[i:i+1500] for i in range(0, len(response), 1500)]
+    channel = llmreply["content"]["message"].channel
+    thread = None
+    if isinstance(channel,discord.Thread):
+        print("Is in thread, yes")
+        thread = channel
+        channel = channel.parent
 
     character_name = llmreply["content"]["character"]["name"]  # Placeholder for character name
     character_avatar_url = llmreply["content"]["character"]["image"]  # Placeholder for character avatar URL
     
     for chunk in response_chunks:
-        await send_webhook_message(llmreply["content"]["message"].channel, chunk, character_avatar_url, character_name)
+        await send_webhook_message(channel, chunk, character_avatar_url, character_name,thread)
 
 async def send_as_user(llmreply):
-    await send_webhook_message(llmreply["simple_message"].channel, llmreply["simple_message"].content, llmreply["simple_message"].author.avatar.url, llmreply["simple_message"].author.display_name)
+    thread = None
+    if isinstance(channel,discord.Thread):
+        print("Is in thread, yes")
+        thread = channel
+        channel = channel.parent
+    await send_webhook_message(channel, llmreply["simple_message"].content, llmreply["simple_message"].author.avatar.url, llmreply["simple_message"].author.display_name,thread)
 
 async def send_as_sytem(llmreply):
-    await send_webhook_message(llmreply["text_message"]["message"].channel, llmreply["text_message"]["message"].content,default_character_url, default_character_name)
+    thread = None
+    if isinstance(channel,discord.Thread):
+        print("Is in thread, yes")
+        thread = channel
+        channel = channel.parent
+    await send_webhook_message(channel, llmreply["text_message"]["message"].content,default_character_url, default_character_name, thread)
 
   # Function to send messages using a webhook
-async def send_webhook_message(channel: discord.TextChannel, content: str, avatar_url: str, username: str) -> None:
+async def send_webhook_message(channel: discord.TextChannel, content: str, avatar_url: str, username: str,thread:discord.Thread = None) -> None:
     if isinstance(channel, discord.DMChannel):
         return
-    webhook_list = await channel.webhooks()
-    # content = clean_text(content)
+    elif thread != None:
+        webhook_list = await channel.webhooks()
+        for webhook in webhook_list:
+            if webhook.name == "AktivaAI":
+                await webhook.send(content, username=username, avatar_url=avatar_url, thread=thread)
+                return
 
-    for webhook in webhook_list:
-        if webhook.name == "AktivaAI":
-            await webhook.send(content, username=username, avatar_url=avatar_url)
-            return
+        webhook = await channel.create_webhook(name="AktivaAI")
+        await webhook.send(content, username=username, avatar_url=avatar_url, thread=thread)
+    else:
+        webhook_list = await channel.webhooks()
+        # content = clean_text(content)
 
-    webhook = await channel.create_webhook(name="AktivaAI")
-    await webhook.send(content, username=username, avatar_url=avatar_url)
+        for webhook in webhook_list:
+            if webhook.name == "AktivaAI":
+                await webhook.send(content, username=username, avatar_url=avatar_url)
+                return
+
+        webhook = await channel.create_webhook(name="AktivaAI")
+        await webhook.send(content, username=username, avatar_url=avatar_url)
 
 
 

@@ -20,18 +20,23 @@ async def bot_behavior(message: discord.Message, client: discord.Client) -> bool
             if str(replied[0])==bot:
                 await bot_think(message, bot.lower())
                 return True
-
+        
     #The Fuzzy Logic Part~
     if message.webhook_id is None:
         text = message.content
-        if message.channel.type == discord.ChannelType.public_thread or message.channel.type == discord.ChannelType.private_thread:
-            return True
+        # if message.channel.type == discord.ChannelType.public_thread or message.channel.type == discord.ChannelType.private_thread:
+        #     return True
 
          # Check for each word in the list if it is present in the text
         for bot in botlist:
             if re.search(bot.lower(), text.lower()):
                 await bot_think(message, bot.lower())
                 return True
+            
+        if text.startswith("^"):
+                await bot_think(message, bot.lower())
+                return True
+
 
         # Check if contains the word 'Debugus Starticus!'
         if re.search("Debugus Starticus!", str(text)):
