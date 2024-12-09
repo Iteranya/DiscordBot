@@ -61,7 +61,7 @@ def setup_commands():
 
     @group.command(name="list", description="Pull Up A List Of Bots")
     async def aktiva_list(interaction: discord.Interaction):
-        response = main.character_info()
+        response = await main.character_info()
         await interaction.response.send_message(response, ephemeral=True)
 
     @group.command(name="set_location", description="Edit Location Data")
