@@ -70,6 +70,25 @@ class EditMessageModal(discord.ui.Modal, title='Edit Message'):
     #     await edit(self.original_message, self.new_content.value)
     #     await interaction.response.send_message("Message edited successfully!", ephemeral=True)
 
+def edit_location(interaction: discord.Interaction, message: str):
+    data = createOrFetchJson(interaction.channel.name)
+    data["description"] =  message
+    replaceJsonContent(interaction.channel.name,data)
+    return data["description"]
+
+def get_location(interaction: discord.Interaction):
+    data = createOrFetchJson(interaction.channel.name)
+    return data["description"]
+
+def edit_global(interaction: discord.Interaction, message: str):
+    data = createOrFetchJson(interaction.channel.name)
+    data["global"] =  message
+    replaceJsonContent(interaction.channel.name,data)
+    return data["global"]
+
+def get_global(interaction: discord.Interaction):
+    data = createOrFetchJson(interaction.channel.name)
+    return data["global"]
 
 
 async def delete_message_context(interaction: discord.Interaction, message: discord.Message):
