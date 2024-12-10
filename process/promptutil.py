@@ -13,7 +13,10 @@ async def create_text_prompt(
  ) -> str:
     jb = bot["instructions"]
     #jb = "" # Toggle this to disable JB
-    prompt = character+dimension["global"] +history +dimension["location"]+ dimension["instruction"] + jb+"\n[Reply]\n " + bot["name"] + ":"
+    globalvar = dimension.get("global", "")
+    locationvar = dimension.get("location", "")
+    instructionvar = dimension.get("instruction", "")
+    prompt = character+globalvar +history +locationvar+ instructionvar + jb+"\n[Reply]\n " + bot["name"] + ":"
 
     stopping_strings = ["[System", "(System", user + ":",  "[Reply", "(Reply", "System Note", "[End]","[/"] 
     

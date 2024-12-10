@@ -93,6 +93,7 @@ async def send_as_bot(llmreply):
 
 async def send_as_user(llmreply):
     thread = None
+    channel = llmreply["simple_message"]["message"].channel
     if isinstance(channel,discord.Thread):
         print("Is in thread, yes")
         thread = channel
@@ -101,6 +102,8 @@ async def send_as_user(llmreply):
 
 async def send_as_sytem(llmreply):
     thread = None
+    print(llmreply)
+    channel = llmreply["text_message"]["message"].channel
     if isinstance(channel,discord.Thread):
         print("Is in thread, yes")
         thread = channel
