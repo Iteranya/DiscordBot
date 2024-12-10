@@ -70,15 +70,15 @@ class EditMessageModal(discord.ui.Modal, title='Edit Message'):
     #     await edit(self.original_message, self.new_content.value)
     #     await interaction.response.send_message("Message edited successfully!", ephemeral=True)
 
-def edit_location(interaction: discord.Interaction, message: str):
+def edit_instruction(interaction: discord.Interaction, message: str):
     data = createOrFetchJson(interaction.channel.name)
-    data["description"] =  message
+    data["instruction"] =  message
     replaceJsonContent(interaction.channel.name,data)
-    return data["description"]
+    return data["instruction"]
 
-def get_location(interaction: discord.Interaction):
+def get_instruction(interaction: discord.Interaction):
     data = createOrFetchJson(interaction.channel.name)
-    return data["description"]
+    return data["instruction"]
 
 def edit_global(interaction: discord.Interaction, message: str):
     data = createOrFetchJson(interaction.channel.name)
@@ -160,7 +160,8 @@ def createOrFetchJson(input_string):
     data = {
         "name": input_string,
         "description":"[System Note: Takes place in a discord text channel]",
-        "global":"[System Note: Takes place in a discord server]"
+        "global":"[System Note: Takes place in a discord server]",
+        "instruction":"[System Note: Takes place in a discord text channel]"
         }
     with open(file_name, "w") as json_file:
         json.dump(data, json_file, indent=4)

@@ -148,7 +148,8 @@ def createOrFetchJson(input_string):
     data = {
         "name": input_string,
         "description":"[System Note: Takes place in a discord text channel]",
-        "global":"[System Note: Takes place in a discord server]"
+        "global":"[System Note: Takes place in a discord server]",
+        "instruction":"[System Note: Takes place in a discord text channel]"
         }
     with open(file_name, "w") as json_file:
         json.dump(data, json_file, indent=4)

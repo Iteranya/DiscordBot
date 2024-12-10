@@ -64,9 +64,9 @@ def setup_commands():
         response = await main.character_info()
         await interaction.response.send_message(response, ephemeral=True)
 
-    @group.command(name="set_location", description="Edit Location Data")
-    async def aktiva_setlocation(interaction: discord.Interaction, location_desc:str):
-        response = main.edit_location(interaction,location_desc)
+    @group.command(name="set_instruction", description="Edit Instruction Data")
+    async def aktiva_setinstruction(interaction: discord.Interaction, instruction_desc:str):
+        response = main.edit_instruction(interaction,instruction_desc)
         await interaction.response.send_message(response, ephemeral=True)
 
     @group.command(name="set_global", description="Edit Global Data")
@@ -74,9 +74,9 @@ def setup_commands():
         response = main.edit_global(interaction,global_var)
         await interaction.response.send_message(response, ephemeral=True)
 
-    @group.command(name="get_location", description="Edit Location Data")
-    async def aktiva_getlocation(interaction: discord.Interaction):
-        response = main.get_location(interaction)
+    @group.command(name="get_instruction", description="Edit Instruction Data")
+    async def aktiva_getinstruction(interaction: discord.Interaction):
+        response = main.get_instruction(interaction)
         await interaction.response.send_message(response, ephemeral=True)
 
     @group.command(name="get_global", description="Edit Global Data")
