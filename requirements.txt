@@ -5,3 +5,5 @@ httpx
 pillow
 requests
 aiohttp
+transformers
+huggingface_hub
