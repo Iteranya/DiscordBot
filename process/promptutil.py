@@ -18,7 +18,7 @@ async def create_text_prompt(
     instructionvar = dimension.get("instruction", "")
     prompt = character+globalvar +history +locationvar+ instructionvar + jb+"\n[Reply]\n " + bot["name"] + ":"
 
-    stopping_strings = ["[System", "(System", user + ":",  "[Reply", "(Reply", "System Note", "[End]","[/"] 
+    stopping_strings = ["[System", "(System", user + ":",  "[Reply", "(Reply", "System Note", "[End","[/"] 
     
     stopping_strings = set(stopping_strings)
     stopping_strings = list(stopping_strings)

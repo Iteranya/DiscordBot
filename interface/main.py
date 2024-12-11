@@ -92,12 +92,13 @@ def get_global(interaction: discord.Interaction):
 
 
 async def delete_message_context(interaction: discord.Interaction, message: discord.Message):
-    await interaction.response.send_message("Still a WIP, it doesn't delete it from memory", ephemeral=True)
     await delete(message,interaction)
 
 async def edit_message_context(interaction: discord.Interaction, message: discord.Message):
-    await client.fetch_webhook(message.webhook_id)
-    await interaction.response.send_modal(EditMessageModal(message))
+    if message.webhook_id!=None:
+        await client.fetch_webhook(message.webhook_id)
+        await interaction.response.send_modal(EditMessageModal(message))
+    await interaction.response.send_message("This isn't a bot's message, this is human's message")
 
 async def edit(message:discord.Message, webhook_id, new_content):
     print(webhook_id)
@@ -107,9 +108,10 @@ async def edit(message:discord.Message, webhook_id, new_content):
 async def delete(message:discord.Message,interaction:discord.Interaction):
     webhook = await client.fetch_webhook(message.webhook_id)
     if isinstance(interaction.channel,discord.Thread):
-        await webhook.delete_message(message_id=message.id,thread=interaction.channel)
+        await webhook.delete_message(message.id,thread=interaction.channel)
     else:
         await webhook.delete_message(message.id)
+    await interaction.response.send_message("Deleted~")
 
 async def character_info():
     character = await get_bot()
