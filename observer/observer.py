@@ -32,11 +32,6 @@ async def bot_behavior(message: discord.Message, client: discord.Client) -> bool
             if re.search(bot.lower(), text.lower()):
                 await bot_think(message, bot.lower())
                 return True
-            
-        if text.startswith("^"):
-                await bot_think(message, bot.lower())
-                return True
-
 
         # Check if contains the word 'Debugus Starticus!'
         if re.search("Debugus Starticus!", str(text)):

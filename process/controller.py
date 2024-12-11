@@ -16,8 +16,10 @@ from process import qutil
 from process import history
 from typing import Any
 from process import lam
+from duckduckgo_search import AsyncDDGS
 # This part decides what to do with the incoming message
 # Also LAM stuff~(coming soon)
+import traceback
 inline_comprehension = True
 async def think() -> None:
 
@@ -47,7 +49,17 @@ async def think() -> None:
             elif message_content.startswith("//"):
                 pass
             elif message_content.startswith("^"):
-                await send_positional_message(message_content,dimension)
+                message_content = message_content.replace("^","")
+                message_content = message_content.replace(str(json_card["name"]),"")
+                message_content = message_content.strip()
+                image_result =""
+                if "news" in message_content:
+                    top_result = await get_news(message_content)
+                elif "image" in message_content or "picture" in message_content:
+                    image_result = await get_image(message_content)
+                else:
+                    top_result = await get_top_search_result(message_content)
+                await send_grounded_message(message,json_card,dimension,str(top_result),image_result)
             elif message.attachments:
                 if(config.florence):
                     await send_multimodal_message(message,json_card,dimension)
@@ -76,7 +88,18 @@ async def think() -> None:
             elif message_content.startswith("//"):
                 pass
             elif message_content.startswith("^"):
-                await send_positional_message(message_content,dimension)
+                message_content = message_content.replace("^","")
+                message_content = message_content.replace(str(json_card["name"]),"")
+                message_content = message_content.strip()
+                image_result =""
+                top_result = ""
+                if "news" in message_content:
+                    top_result = await get_news(message_content)
+                elif "image" in message_content or "picture" in message_content:
+                    image_result = await get_image(message_content)
+                else:
+                    top_result = await get_top_search_result(message_content)
+                await send_grounded_message(message,json_card,dimension,str(top_result),image_result)
             elif message.attachments:
                 if(config.florence):
                     await send_multimodal_message(message,json_card,dimension)
@@ -100,6 +123,16 @@ async def send_multimodal_message(message:discord.message, json_card,dimension):
     await apiconfig.send_to_discord(llm_response)
     return
 
+async def send_grounded_message(message:discord.message, json_card,dimension,top_message,images=""):
+    print("Grounding Processing...")
+    
+    context = await history.get_channel_history(message.channel)
+    context+="\n[System Note: Web Search result: "+top_message+"]"
+    text_bot_prompt = await qutil.get_text_prompt_queue_item(message,json_card,context,dimension)
+    llm_response = await apiconfig.send_to_model_queue(text_bot_prompt)
+    llm_response['response']+=images
+    await apiconfig.send_to_discord(llm_response)
+    return
 
 async def send_llm_message(message,json_card,dimension):
     print("Chat Completion Processing...")
@@ -183,3 +216,73 @@ def sanitize_string(input_string):
     # Remove unwanted symbols (keeping letters, numbers, spaces, and basic punctuation)
     sanitized_string = re.sub(r'[^a-zA-Z0-9\s.,!?\'\"-]', '', sanitized_string)
     return sanitized_string.strip()
+
+async def get_top_search_result(query: str, max_results: int = 5) -> dict:
+    try:
+        # Perform the search using AsyncDDGS
+        results = await AsyncDDGS(verify= False).atext(
+            query, 
+            region='wt-wt',  # worldwide search
+            safesearch="off",
+            max_results=max_results
+            
+        )
+        
+        # Return the first result if available
+        return results
+    
+    except Exception as e:
+        traceback.print_exc()
+        print(f"An error occurred during search: {e}")
+        return {}
+
+async def get_news(query: str, max_results: int = 5) -> dict:
+    try:
+        # Perform the search using AsyncDDGS
+        results = await AsyncDDGS(verify= False).anews(
+            query, 
+            region='wt-wt',  # worldwide search
+            safesearch="off",
+            max_results=max_results
+            
+        )
+        return results
+    
+    except Exception as e:
+        traceback.print_exc()
+        print(f"An error occurred during search: {e}")
+        return {}
+
+async def get_image(query: str, max_results: int = 5) -> dict:
+    try:
+        # Perform the search using AsyncDDGS
+        results = await AsyncDDGS(verify= False).aimages(
+            query, 
+            region='wt-wt',  # worldwide search
+            safesearch="off",
+            max_results=max_results
+        )
+        
+        # Return the first result if available
+        return extract_image_links(results)
+    
+    except Exception as e:
+        traceback.print_exc()
+        print(f"An error occurred during search: {e}")
+        return {}
+
+def extract_image_links(results):
+    """
+    Extracts image links from a results dictionary and returns them as a newline-separated string.
+
+    Args:
+        results (list): A list of dictionaries containing image information.
+
+    Returns:
+        str: A newline-separated string of image links.
+    """
+    # Extract the 'image' URLs from each dictionary in the results list
+    links = [result['image'] for result in results if 'image' in result]
+
+    # Join the links with newline characters
+    return "\n".join(links)

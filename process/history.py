@@ -22,8 +22,8 @@ async def get_channel_history(channel, append: str | None = None, limit: int = 5
                 #do nothing
                 pass
             elif content.startswith("^"):
-                #do nothing
-                pass
+                content = content.replace("^","")
+                history.append(f"[Reply]{sanitized_name}: {content.strip()}[End]")
             else:
                 # Add the pseudonym function here
                 history.append(f"[Reply]{sanitized_name}: {content.strip()}[End]")
@@ -46,8 +46,8 @@ async def get_channel_history(channel, append: str | None = None, limit: int = 5
                 #do nothing
                 pass
             elif content.startswith("^"):
-                #do nothing
-                pass
+                content = content.replace("^","")
+                history.append(f"[Reply]{sanitized_name}: {content.strip()}[End]")
             else:
                 # Add the pseudonym function here
                 history.append(f"[Reply]{sanitized_name}: {content.strip()}[End]")
