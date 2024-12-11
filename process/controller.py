@@ -53,9 +53,10 @@ async def think() -> None:
                 message_content = message_content.replace(str(json_card["name"]),"")
                 message_content = message_content.strip()
                 image_result =""
-                if "news" in message_content:
+                message_content = extract_between_quotes(message_content)
+                if "news" in message.content:
                     top_result = await get_news(message_content)
-                elif "image" in message_content or "picture" in message_content:
+                elif "image" in message.content or "picture" in message.content:
                     image_result = await get_image(message_content)
                 else:
                     top_result = await get_top_search_result(message_content)
@@ -93,9 +94,10 @@ async def think() -> None:
                 message_content = message_content.strip()
                 image_result =""
                 top_result = ""
-                if "news" in message_content:
+                message_content = extract_between_quotes(message_content)
+                if "news" in message.content:
                     top_result = await get_news(message_content)
-                elif "image" in message_content or "picture" in message_content:
+                elif "image" in message.content or "picture" in message.content:
                     image_result = await get_image(message_content)
                 else:
                     top_result = await get_top_search_result(message_content)
@@ -254,12 +256,13 @@ async def get_news(query: str, max_results: int = 5) -> dict:
         return {}
 
 async def get_image(query: str, max_results: int = 5) -> dict:
+    
     try:
         # Perform the search using AsyncDDGS
         results = await AsyncDDGS(verify= False).aimages(
             query, 
             region='wt-wt',  # worldwide search
-            safesearch="off",
+            safesearch='off',
             max_results=max_results
         )
         
@@ -272,17 +275,13 @@ async def get_image(query: str, max_results: int = 5) -> dict:
         return {}
 
 def extract_image_links(results):
-    """
-    Extracts image links from a results dictionary and returns them as a newline-separated string.
-
-    Args:
-        results (list): A list of dictionaries containing image information.
-
-    Returns:
-        str: A newline-separated string of image links.
-    """
     # Extract the 'image' URLs from each dictionary in the results list
     links = [result['image'] for result in results if 'image' in result]
 
     # Join the links with newline characters
     return "\n".join(links)
+
+def extract_between_quotes(input_string):
+    import re
+    match = re.search(r"\((.*?)\)", input_string)
+    return match.group(1) if match else input_string
